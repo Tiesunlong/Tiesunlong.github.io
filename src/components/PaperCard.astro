@@ -21,12 +21,13 @@ if (pub.links.pdf) links.push({ label: 'PDF', href: pub.links.pdf, icon: 'file-p
 if (pub.links.arxiv) links.push({ label: 'arXiv', href: arxivUrl(pub.links.arxiv), icon: 'file-text' });
 if (pub.links.openreview) links.push({ label: 'OpenReview', href: pub.links.openreview, icon: 'article' });
 if (pub.links.doi) links.push({ label: 'DOI', href: doiUrl(pub.links.doi), icon: 'link' });
-if (pub.links.code) links.push({ label: 'Code', href: pub.links.code, icon: 'code' });
 if (pub.links.project) links.push({ label: 'Project', href: pub.links.project, icon: 'arrow-up-right' });
-const primary = links[0]?.href;
+const primary = pub.primaryLink;
 
 const status = pub.status === 'accepted' ? 'Accepted' : pub.status === 'preprint' ? 'Preprint' : undefined;
-const venueLine = [pub.venueFull ?? pub.venue, pub.track].filter(Boolean).join(' · ');
+const venueName = pub.venueFull ?? pub.venue;
+// "Findings of …" already says Findings; only append a track the name lacks.
+const venueLine = pub.track && !venueName.toLowerCase().includes(pub.track.toLowerCase()) ? `${venueName} · ${pub.track}` : venueName;
 const last = pub.authorList.length - 1;
 ---
 

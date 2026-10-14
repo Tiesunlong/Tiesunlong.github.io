@@ -1,6 +1,6 @@
 ---
 import { getImage } from 'astro:assets';
-import { profile } from '../lib/data';
+import { photoAlt, profile } from '../lib/data';
 import { resolvePhoto } from '../lib/photo';
 
 interface Props {
@@ -8,9 +8,11 @@ interface Props {
   description: string;
   ogType?: 'website' | 'profile' | undefined;
   jsonLd?: Record<string, unknown> | undefined;
+  /** Error pages: no canonical, kept out of search results. */
+  noindex?: boolean | undefined;
 }
 
-const { title, description, ogType = 'website', jsonLd } = Astro.props;
+const { title, description, ogType = 'website', jsonLd, noindex = false } = Astro.props;
 const site = Astro.site ?? new URL('https://tiesunlong.github.io');
 const canonical = new URL(Astro.url.pathname, site).href;
 
@@ -25,7 +27,7 @@ const ogImageUrl = new URL(ogImage?.src ?? (photo.kind === 'public' ? photo.src 
 
 <title>{title}</title>
 <meta name="description" content={description} />
-<link rel="canonical" href={canonical} />
+{noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
 <meta name="author" content={profile.name} />
 
 <meta property="og:type" content={ogType} />
@@ -36,7 +38,7 @@ const ogImageUrl = new URL(ogImage?.src ?? (photo.kind === 'public' ? photo.src 
 <meta property="og:image" content={ogImageUrl} />
 {ogImage && <meta property="og:image:width" content="600" />}
 {ogImage && <meta property="og:image:height" content="600" />}
-<meta property="og:image:alt" content={profile.photoAlt ?? `Portrait of ${profile.name}`} />
+<meta property="og:image:alt" content={photoAlt} />
 <meta property="og:locale" content="en_US" />
 {ogType === 'profile' && <meta property="profile:first_name" content={profile.name.split(' ')[0]} />}
 {ogType === 'profile' && <meta property="profile:last_name" content={profile.name.split(' ').slice(1).join(' ')} />}

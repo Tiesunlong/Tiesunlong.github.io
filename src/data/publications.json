@@ -1,94 +1,428 @@
 [
   {
-    "id": "shen2026-llmdoctor",
+    "id": "zhang2026flowsteer",
+    "title": "FlowSteer: Towards Agents Designing Agentic Workflows via Reinforced Progressive Canvas Editing",
+    "authors": [
+      "Mingda Zhang",
+      "Wenjin Liu",
+      "Tiesunlong Shen",
+      "Qika Lin",
+      "Rui Mao",
+      "Erik Cambria",
+      "Xiaoying Tang",
+      "Haoran Luo"
+    ],
+    "venue": "NeurIPS",
+    "venueFull": "Advances in Neural Information Processing Systems 39 (NeurIPS 2026)",
+    "year": 2026,
+    "type": "conference",
+    "status": "accepted",
+    "selected": true,
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2602.01664",
+      "project": "http://flowsteer.org/",
+      "openreview": "https://openreview.net/forum?id=R0wivLiPfK"
+    },
+    "tags": [
+      "LLM Agents",
+      "Agentic Workflows",
+      "Reinforcement Learning"
+    ],
+    "isNew": true,
+    "corresponding": [
+      "Tiesunlong Shen"
+    ],
+    "abstract": "In recent years, agentic workflows have been widely applied to solve complex human tasks. However, existing workflow construction still faces key challenges, including human-dependent workflow construction, the lack of graph-level execution feedback, and the inability to repair errors in-loop during long-horizon construction. To address these challenges, we propose FlowSteer, a new paradigm of Agent Designing Agentic Workflows - a single agent itself end-to-end designs the workflow that a downstream executor runs. To support this paradigm, we introduce the Workflow Canvas, a novel executable graph-state environment that returns syntax-checked execution feedback for every atomic edit. Built on the canvas, we further propose Reinforced Progressive Canvas Editing, in which a lightweight policy agent issues one atomic edit per turn conditioned on real canvas feedback, and is trained end-to-end via reinforcement learning. Moreover, FlowSteer provides a plug-and-play framework that supports diverse operator libraries and interchangeable LLM backends. Experimental results on twelve datasets show that FlowSteer significantly outperforms baselines across various tasks. Our code is available at https://anonymous.4open.science/r/FlowSteer-9B2E."
+  },
+  {
+    "id": "zhou2026metapath",
+    "title": "Reasoning through Evolution: Automatic Meta-path Discovery for LLM-based Fake News Detection",
+    "authors": [
+      "Ziyi Zhou",
+      "Xiaoming Zhang",
+      "Hui Pang",
+      "Yuting Zhang",
+      "Tiesunlong Shen",
+      "Bingyu Yan",
+      "Erik Cambria",
+      "Litian Zhang"
+    ],
+    "corresponding": [
+      "Xiaoming Zhang"
+    ],
+    "venue": "ACM MM",
+    "venueFull": "Proceedings of the 34th ACM International Conference on Multimedia (MM '26)",
+    "year": 2026,
+    "type": "conference",
+    "status": "accepted",
+    "track": "Oral",
+    "selected": false,
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2609.18597"
+    },
+    "tags": [
+      "Fake News Detection",
+      "Large Language Models",
+      "Meta-path Discovery"
+    ],
+    "isNew": true,
+    "abstract": "Propagation structures provide crucial evidence for fake news detection, yet existing approaches primarily rely on supervised GNN-based models, which require substantial labeled data and exhibit limited generalization. Although large language models (LLMs) exhibit strong reasoning capabilities, directly feeding them raw propagation graphs creates a significant modality mismatch and severe information overload, making structure-aware reasoning unreliable in zero-shot and few-shot settings. To bridge this gap, we propose MAGER, a multi-agent genetic evolution framework that automatically discovers meta-paths optimized for LLM reasoning. By compressing complex propagation graphs into informative subgraphs, the evolved meta-paths alleviate both information overload and modality mismatch, enabling frozen LLMs to perform structure-aware veracity reasoning. We further introduce a graph in-context learning strategy that retrieves semantically and structurally similar demonstrations to strengthen classification and reasoning. Extensive experiments show that MAGER substantially improves frozen LLMs as standalone fake news detectors in data-efficient settings. Our code is available at https://github.com/SenticNet/MAGER."
+  },
+  {
+    "id": "shen2026cgd",
+    "title": "Controllable Graph Diffusion for Community Search",
+    "authors": [
+      "Tiesunlong Shen",
+      "Jin Wang",
+      "Liang-Chih Yu",
+      "Xuejie Zhang",
+      "Rui Mao",
+      "Erik Cambria"
+    ],
+    "corresponding": [
+      "Jin Wang",
+      "Liang-Chih Yu"
+    ],
+    "venue": "Information Fusion",
+    "venueFull": "Information Fusion, vol. 137, art. 104655",
+    "year": 2026,
+    "type": "journal",
+    "status": "published",
+    "selected": true,
+    "links": {
+      "doi": "https://doi.org/10.1016/j.inffus.2026.104655"
+    },
+    "tags": [
+      "Graph Diffusion",
+      "Community Search",
+      "Graph Learning"
+    ],
+    "isNew": true,
+    "volume": "137",
+    "pages": "104655",
+    "publisher": "Elsevier BV"
+  },
+  {
+    "id": "liu2026promptr1",
+    "title": "Prompt-R1: Collaborative Automatic Prompting Framework via End-to-end Reinforcement Learning",
+    "authors": [
+      "Wenjin Liu",
+      "Haoran Luo",
+      "Xueyuan Lin",
+      "Haoming Liu",
+      "Tiesunlong Shen",
+      "Jiapu Wang",
+      "Rui Mao",
+      "Erik Cambria"
+    ],
+    "corresponding": [
+      "Haoran Luo",
+      "Haoming Liu"
+    ],
+    "venue": "ACL Findings",
+    "venueFull": "Findings of the Association for Computational Linguistics: ACL 2026, pp. 16260-16280",
+    "year": 2026,
+    "type": "conference",
+    "status": "published",
+    "track": "Findings",
+    "selected": false,
+    "links": {
+      "pdf": "https://aclanthology.org/2026.findings-acl.799.pdf",
+      "arxiv": "https://arxiv.org/abs/2511.01016",
+      "doi": "https://doi.org/10.18653/v1/2026.findings-acl.799"
+    },
+    "tags": [
+      "Large Language Models",
+      "Prompt Optimization",
+      "Reinforcement Learning"
+    ],
+    "isNew": true,
+    "pages": "16260–16280",
+    "publisher": "Association for Computational Linguistics",
+    "abstract": "Recently, advanced large language models (LLMs) have emerged at an increasingly rapid pace. However, when faced with complex problems, most users are often unable to provide accurate and effective prompts to interact with LLMs, thus limiting the performance of LLMs. To address this challenge, we propose Prompt-R1, an end-to-end reinforcement learning framework that uses a small-scale LLM to collaborate with large-scale LLMs, replacing user interaction to solve problems better. This collaboration is cast as a multi-turn prompt interaction, where the small-scale LLM thinks and generates prompts, and the large-scale LLM performs complex reasoning. A dual-constrained reward is designed to optimize for correctness, generation quality, and reasoning accuracy. Prompt-R1 provides a plug-and-play framework that supports both inference and training with various large-scale LLMs. Experiments on multiple public datasets show that Prompt-R1 significantly outperforms baseline models across tasks. Our code is publicly available at https://github.com/QwenQKing/Prompt-R1."
+  },
+  {
+    "id": "cambria2026senticnet9",
+    "title": "SenticNet 9: Generative Commonsense for Emotion AI via Conceptual Primitive Discovery and Time Shift Mechanism",
+    "authors": [
+      "Erik Cambria",
+      "Rui Mao",
+      "Xulang Zhang",
+      "Luwei Xiao",
+      "Tiesunlong Shen",
+      "Avinash Anand"
+    ],
+    "venue": "IEEE TCSS",
+    "venueFull": "IEEE Transactions on Computational Social Systems, vol. 13, no. 3, pp. 4086-4095",
+    "year": 2026,
+    "type": "journal",
+    "status": "published",
+    "selected": false,
+    "links": {
+      "doi": "https://doi.org/10.1109/TCSS.2026.3677113"
+    },
+    "tags": [
+      "Emotion AI",
+      "Commonsense Reasoning",
+      "Neurosymbolic AI"
+    ],
+    "isNew": true,
+    "volume": "13",
+    "pages": "4086–4095",
+    "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+    "abstract": "Large language models (LLMs) generate fluent, context-rich text but suffer from hallucinations and limited interpretability. We introduce SenticNet 9, a neurosymbolic framework that automates commonsense reasoning while preserving transparency. It leverages conceptual primitive discovery (CPD) to learn foundational concepts and a time shift mechanism (TSM) to iteratively refine them through temporal feedback. This combination yields a scalable, cognitively inspired architecture that merges symbolic interpretability with LLM generalization. Experiments show SenticNet 9 outperforming embeddings, transformers, and state-of-the-art LLMs across tasks, delivering higher accuracy without sacrificing explainability."
+  },
+  {
+    "id": "shen2026llmdoctor",
     "title": "LLMdoctor: Token-Level Flow-Guided Preference Optimization for Efficient Test-Time Alignment of Large Language Models",
     "authors": [
       "Tiesunlong Shen",
-      "others"
+      "Rui Mao",
+      "Jin Wang",
+      "Heming Sun",
+      "Jian Zhang",
+      "Xuejie Zhang",
+      "Erik Cambria"
+    ],
+    "corresponding": [
+      "Jin Wang"
     ],
     "venue": "AAAI",
-    "venueFull": "Proceedings of the AAAI Conference on Artificial Intelligence (AAAI)",
+    "venueFull": "Proceedings of the AAAI Conference on Artificial Intelligence, vol. 40, no. 39 (AAAI-26), pp. 32920-32928",
     "year": 2026,
     "type": "conference",
     "status": "published",
     "selected": true,
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2601.10416",
+      "doi": "https://doi.org/10.1609/aaai.v40i39.40573",
+      "project": "https://ojs.aaai.org/index.php/AAAI/article/view/40573"
+    },
     "tags": [
       "Large Language Models",
       "Preference Optimization",
       "Test-Time Alignment"
     ],
-    "abstract": "We propose LLMdoctor, a novel token-level flow-guided preference optimization method for efficient test-time alignment of large language models. Our approach achieves superior performance in aligning LLMs with human preferences while maintaining computational efficiency."
+    "isNew": false,
+    "volume": "40",
+    "pages": "32920–32928",
+    "publisher": "Association for the Advancement of Artificial Intelligence (AAAI)",
+    "abstract": "Aligning Large Language Models (LLMs) with human preferences is critical, yet traditional fine-tuning methods are computationally expensive and inflexible. While test-time alignment offers a promising alternative, existing approaches often rely on distorted trajectory-level signals or inefficient sampling, fundamentally capping performance and failing to preserve the generative diversity of the base model. This paper introduces LLMdoctor, a novel framework for efficient test-time alignment that operates via a patient-doctor paradigm. It integrates token-level reward acquisition with token-level flow-guided preference optimization (TFPO) to steer a large, frozen patient LLM with a smaller, specialized doctor model. Unlike conventional methods that rely on trajectory-level rewards, LLMdoctor first extracts fine-grained, token-level preference signals from the patient model's behavioral variations. These signals then guide the training of the doctor model via TFPO, which establishes flow consistency across all subtrajectories, enabling precise token-by-token alignment while inherently preserving generation diversity. Extensive experiments demonstrate that LLMdoctor significantly outperforms existing test-time alignment methods and even surpasses the performance of full fine-tuning approaches like DPO."
   },
   {
-    "id": "shen2025-flow-dpo-sigir",
+    "id": "pan2026multitask",
+    "title": "Multitask Reinforcement Learning with Metadata-Guided Adaptive Routing",
+    "authors": [
+      "Rui Pan",
+      "Haoran Luo",
+      "Quan Yuan",
+      "Guiyang Luo",
+      "Jinglin Li",
+      "Tiesunlong Shen",
+      "Rui Mao",
+      "Erik Cambria"
+    ],
+    "venue": "Information Fusion",
+    "venueFull": "Information Fusion, vol. 129, art. 104068",
+    "year": 2026,
+    "type": "journal",
+    "status": "published",
+    "selected": false,
+    "links": {
+      "doi": "https://doi.org/10.1016/j.inffus.2025.104068"
+    },
+    "tags": [
+      "Reinforcement Learning",
+      "Multitask Learning"
+    ],
+    "isNew": true,
+    "volume": "129",
+    "pages": "104068",
+    "publisher": "Elsevier BV"
+  },
+  {
+    "id": "zhang2026gkgllm",
+    "title": "GKG-LLM: A Unified Framework for Generalized Knowledge Graph Construction",
+    "authors": [
+      "Jian Zhang",
+      "Shihao Qi",
+      "Yuxuan Dong",
+      "Li Yuan",
+      "Tiesunlong Shen",
+      "Weiping Fu",
+      "Bifan Wei",
+      "Haiping Zhu",
+      "Jun Liu"
+    ],
+    "venue": "Information Fusion",
+    "venueFull": "Information Fusion, vol. 128, art. 103956",
+    "year": 2026,
+    "type": "journal",
+    "status": "published",
+    "selected": false,
+    "links": {
+      "doi": "https://doi.org/10.1016/j.inffus.2025.103956"
+    },
+    "tags": [
+      "Knowledge Graph Construction",
+      "Large Language Models"
+    ],
+    "isNew": true,
+    "volume": "128",
+    "pages": "103956",
+    "publisher": "Elsevier BV"
+  },
+  {
+    "id": "ye2025resikgmamba",
+    "title": "ResiKG-Mamba: Knowledge-Guided Hypergraph-Mamba with Residue-Level Pretrained Embeddings for TCR-Epitope Recognition",
+    "authors": [
+      "Fei Ye",
+      "Mao Chen",
+      "Xiang Zhang",
+      "Tiesunlong Shen",
+      "Yixuan Huang",
+      "Ruihao Zhang",
+      "Xiao Liu"
+    ],
+    "venue": "IEEE BIBM",
+    "venueFull": "2025 IEEE International Conference on Bioinformatics and Biomedicine (BIBM), pp. 6307-6314",
+    "year": 2025,
+    "type": "conference",
+    "status": "published",
+    "selected": false,
+    "links": {
+      "doi": "https://doi.org/10.1109/BIBM66473.2025.11355984"
+    },
+    "tags": [
+      "Bioinformatics",
+      "TCR-Epitope Recognition",
+      "Hypergraph"
+    ],
+    "isNew": true,
+    "pages": "6307–6314",
+    "publisher": "IEEE",
+    "abstract": "Predicting TCR recognition for unseen epitopes remains a major challenge due to the limited coverage of known antigen-TCR interactions. We propose ResiKG-Mamba, a Knowledge-Guided hypergraph-Mamba with Residue-level pretrained embeddings, designed to enhance both generalization and interpretability in predicting TCR recognition across unseen epitopes. First, residue-level embeddings obtained from largescale pretrained protein language models are used to initialize amino acid representations, providing rich biochemical priors. Second, a residue-level hypergraph is constructed, where each node denotes an amino acid residue from either the TCR or the epitope, and each hyperedge encodes potential contact motifs or biochemical substructures, thereby modeling highorder cooperative dependencies beyond pairwise edges. Third, HypergraphConv layers and the Mamba Block jointly capture both local topological interactions and long-range sequence dependencies, yielding a unified hybrid representation. Finally, physics-informed constraints are incorporated as auxiliary losses to promote smoothness within hyperedges and preserve chargerelated physical consistency, enhancing both interpretability and biological plausibility. Comprehensive experiments on four challenging generalization scenarios demonstrate that ResiKGMamba significantly outperforms state-of-the-art baselines and provides consistent gains across diverse biologically meaningful settings, including variations in CDR3 length, peptide length, and epitope-specific binding."
+  },
+  {
+    "id": "shen2025sigir",
     "title": "Flow-guided Direct Preference Optimization for Knowledge Graph Reasoning with Trees",
     "authors": [
       "Tiesunlong Shen",
       "Rui Mao",
       "Jin Wang",
-      "others"
+      "Xuejie Zhang",
+      "Erik Cambria"
+    ],
+    "corresponding": [
+      "Rui Mao"
     ],
     "venue": "SIGIR",
-    "venueFull": "Proceedings of the 48th International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR)",
+    "venueFull": "Proceedings of the 48th International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR '25), pp. 1165-1175",
     "year": 2025,
     "type": "conference",
     "status": "published",
     "selected": true,
+    "links": {
+      "doi": "https://doi.org/10.1145/3726302.3729980"
+    },
     "tags": [
       "Knowledge Graph Reasoning",
       "Direct Preference Optimization",
       "Tree Structures"
     ],
-    "abstract": "We propose a flow-guided direct preference optimization method for knowledge graph reasoning with tree structures. Our approach achieves state-of-the-art performance on multiple knowledge graph question answering benchmarks.",
-    "pages": "1165--1175"
+    "isNew": false,
+    "pages": "1165–1175",
+    "publisher": "ACM",
+    "abstract": "Recent advancements in knowledge graph question answering (KGQA) have shown promise, yet existing methods often fail to align with human reasoning patterns that involve continuous reflection and refinement. This paper proposes FD-PORT (flow-guided direct preference optimization for knowledge graph reasoning with trees), a novel approach that combines Monte Carlo Tree Search (MCTS) with flow-guided direct preference optimization (FDPO) for KGQA tasks. MCTS simulates human-like reasoning by systematically exploring multiple inference paths in knowledge graphs, while FDPO transforms the search feedback into fine-grained training signals through flow balance conditions. Unlike traditional methods focusing on end-to-end training or sequence-level preferences, FD-PORT establishes flow consistency between any states along the reasoning chain, enabling robust multi-hop reasoning that adapts to local decisions and long-range dependencies. Experimental results on three benchmark datasets demonstrate that FD-PORT significantly outperforms state-of-the-art methods, achieving up to 50.6% improvements over GPT-4 on complex multi-hop reasoning tasks with a smaller open-source language model. The framework is advanced in maintaining diverse reasoning paths while ensuring answer quality, closely mirroring human problem-solving strategies."
   },
   {
-    "id": "shen2025-insight-right-spot",
+    "id": "shen2025icassp",
+    "title": "Hop-level Direct Preference Optimization for Knowledge Graph Reasoning with Trees",
+    "authors": [
+      "Tiesunlong Shen",
+      "Jin Wang",
+      "Xuejie Zhang",
+      "Erik Cambria"
+    ],
+    "venue": "ICASSP",
+    "venueFull": "2025 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP 2025), pp. 1-5",
+    "year": 2025,
+    "type": "conference",
+    "status": "published",
+    "selected": false,
+    "links": {
+      "doi": "https://doi.org/10.1109/ICASSP49660.2025.10888261"
+    },
+    "tags": [
+      "Knowledge Graph Reasoning",
+      "Multi-hop Reasoning",
+      "Direct Preference Optimization"
+    ],
+    "isNew": false,
+    "pages": "1–5",
+    "publisher": "IEEE",
+    "abstract": "Recent advancements in knowledge graph question answering (KGQA) have shown promise, yet existing methods often fail to align with human reasoning patterns. This study proposes HD-PORT (hop-level direct preference optimization for knowledge graph reasoning with trees), a novel approach that combines Monte Carlo Tree Search (MCTS) with hop-level direct preference optimization (HDPO) for KGQA tasks. MCTS simulates human-like reasoning by exploring multiple inference paths in knowledge graphs, generating interpretable reasoning chains and rich hop-level preferences. HDPO then leverages these preferences for model optimization, addressing the limitations of traditional supervised learning and existing DPO methods that focus on overall solution preferences. By optimizing preferences at each reasoning step, HD-PORT more closely mirrors human problem-solving strategies. Experimental results on benchmark datasets demonstrate that HD-PORT significantly outperforms state-of-the-art methods in both accuracy and interpretability, particularly for complex, multi-hop reasoning tasks."
+  },
+  {
+    "id": "shen2025infofusion",
     "title": "Insight at the Right Spot: Provide Decisive Subgraph Information to Graph LLM with Reinforcement Learning",
     "authors": [
       "Tiesunlong Shen",
       "Erik Cambria",
       "Jin Wang",
-      "others"
+      "Yi Cai",
+      "Xuejie Zhang"
+    ],
+    "corresponding": [
+      "Jin Wang"
     ],
     "venue": "Information Fusion",
-    "venueFull": "Information Fusion",
+    "venueFull": "Information Fusion, vol. 117, art. 102860",
     "year": 2025,
     "type": "journal",
     "status": "published",
+    "selected": true,
+    "links": {
+      "doi": "https://doi.org/10.1016/j.inffus.2024.102860"
+    },
     "tags": [
       "Graph LLM",
       "Reinforcement Learning",
       "Subgraph Information"
     ],
-    "abstract": "We propose a reinforcement learning-based method to provide decisive subgraph information to Graph LLMs. Our approach significantly improves the reasoning capabilities of LLMs on graph-structured data.",
+    "isNew": false,
     "volume": "117",
-    "pages": "102860"
+    "pages": "102860",
+    "publisher": "Elsevier BV"
   },
   {
-    "id": "shen2025-reasoning-with-trees",
+    "id": "shen2025coling",
     "title": "Reasoning with Trees: Faithful Question Answering over Knowledge Graph",
     "authors": [
       "Tiesunlong Shen",
       "Jin Wang",
       "Xuejie Zhang",
-      "others"
+      "Erik Cambria"
     ],
     "venue": "COLING",
-    "venueFull": "Proceedings of the 31st International Conference on Computational Linguistics (COLING)",
+    "venueFull": "Proceedings of the 31st International Conference on Computational Linguistics (COLING 2025), pp. 3138-3157",
     "year": 2025,
     "type": "conference",
     "status": "published",
+    "selected": false,
+    "links": {
+      "pdf": "https://aclanthology.org/2025.coling-main.211.pdf",
+      "project": "https://aclanthology.org/2025.coling-main.211/"
+    },
     "tags": [
       "Knowledge Graph QA",
       "Tree Reasoning",
       "Faithful Reasoning"
     ],
-    "abstract": "We propose a tree-based reasoning framework for faithful question answering over knowledge graphs. Our method ensures interpretable and reliable reasoning paths.",
-    "pages": "3138--3157"
+    "isNew": false
   },
   {
-    "id": "shen2025-kd-meta-gnn",
+    "id": "shen2025infosci",
     "title": "Knowledge Distillation via Adaptive Meta-Learning for Graph Neural Network",
     "authors": [
       "Tiesunlong Shen",
@@ -96,62 +430,230 @@
       "Xuejie Zhang"
     ],
     "venue": "Information Sciences",
-    "venueFull": "Information Sciences",
+    "venueFull": "Information Sciences, vol. 689, art. 121505",
     "year": 2025,
     "type": "journal",
     "status": "published",
+    "selected": false,
+    "links": {
+      "doi": "https://doi.org/10.1016/j.ins.2024.121505"
+    },
     "tags": [
       "Knowledge Distillation",
       "Meta-Learning",
       "Graph Neural Networks"
     ],
-    "abstract": "We propose an adaptive meta-learning approach for knowledge distillation in graph neural networks. Our method effectively transfers knowledge from large GNN models to smaller ones while maintaining performance.",
+    "isNew": false,
     "volume": "689",
-    "pages": "121505"
+    "pages": "121505",
+    "publisher": "Elsevier BV"
   },
   {
-    "id": "shen2025-hop-dpo-icassp",
-    "title": "Hop-level Direct Preference Optimization for Knowledge Graph Reasoning with Trees",
-    "authors": [
-      "Tiesunlong Shen",
-      "Jin Wang",
-      "Xuejie Zhang",
-      "others"
-    ],
-    "venue": "ICASSP",
-    "venueFull": "IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)",
-    "year": 2025,
-    "type": "conference",
-    "status": "published",
-    "tags": [
-      "Knowledge Graph Reasoning",
-      "Multi-hop Reasoning",
-      "Direct Preference Optimization"
-    ],
-    "abstract": "We propose a hop-level direct preference optimization method for knowledge graph reasoning with tree structures. Our approach improves multi-hop reasoning capabilities.",
-    "pages": "1--5"
-  },
-  {
-    "id": "shen2023-graphs-get-personal",
-    "title": "Graphs get Personal: Learning Representation with Contextual Pretraining for Collaborative Filtering",
+    "id": "shen2023applintel",
+    "title": "Graphs Get Personal: Learning Representation with Contextual Pretraining for Collaborative Filtering",
     "authors": [
       "Tiesunlong Shen",
       "You Zhang",
       "Jin Wang",
-      "others"
+      "Xuejie Zhang"
     ],
     "venue": "Applied Intelligence",
-    "venueFull": "Applied Intelligence",
+    "venueFull": "Applied Intelligence, vol. 53, no. 24, pp. 30416-30430",
     "year": 2023,
     "type": "journal",
     "status": "published",
+    "selected": false,
+    "links": {
+      "doi": "https://doi.org/10.1007/s10489-023-05144-9"
+    },
     "tags": [
       "Collaborative Filtering",
       "Graph Representation Learning",
       "Contextual Pretraining"
     ],
-    "abstract": "We propose a contextual pretraining approach for learning graph representations in collaborative filtering. Our method improves recommendation performance by capturing user-item interactions more effectively.",
+    "isNew": false,
     "volume": "53",
-    "pages": "30416--30430"
+    "pages": "30416–30430",
+    "publisher": "Springer Science and Business Media LLC"
+  },
+  {
+    "id": "shen2023fcst",
+    "title": "Probabilistic Recommendation Model Integrating Personality Features",
+    "authors": [
+      "Tiesunlong Shen",
+      "Xiaodong Fu",
+      "Kun Yue",
+      "Li Liu",
+      "Lijun Liu"
+    ],
+    "corresponding": [
+      "Xiaodong Fu"
+    ],
+    "venue": "J. Front. Comput. Sci. Technol.",
+    "venueFull": "Journal of Frontiers of Computer Science and Technology (计算机科学与探索), vol. 17, no. 1, pp. 251-262",
+    "year": 2023,
+    "type": "journal",
+    "status": "published",
+    "selected": false,
+    "links": {
+      "doi": "https://doi.org/10.3778/j.issn.1673-9418.2106111"
+    },
+    "tags": [
+      "Recommender Systems",
+      "Personality Modeling"
+    ],
+    "isNew": true,
+    "volume": "17",
+    "pages": "251–262"
+  },
+  {
+    "id": "zhang2026scienceclaw",
+    "title": "ScienceClaw: Benchmarking Continual Self-Evolution of AI-for-Science Agents Across the Natural and Social Sciences",
+    "authors": [
+      "Mingda Zhang",
+      "Wenjin Liu",
+      "Tiesunlong Shen",
+      "Zikai Xiao",
+      "Zhenghong Lin",
+      "Qing Xu",
+      "Erik Cambria",
+      "Xiaoying Tang",
+      "Haoran Luo"
+    ],
+    "venue": "arXiv",
+    "venueFull": "arXiv preprint arXiv:2610.08691",
+    "year": 2026,
+    "type": "preprint",
+    "status": "preprint",
+    "selected": false,
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2610.08691"
+    },
+    "tags": [
+      "AI for Science",
+      "LLM Agents",
+      "Benchmark"
+    ],
+    "isNew": true,
+    "abstract": "Large language model agents are accelerating scientific automation, yet verified executions rarely become persistent program-level improvements, and existing evaluations do not examine this process across sequential tasks in both the natural and social sciences. We formalize ScienceClaw as fixed-parameter program self-evolution that unifies task solving, scientific verification, and program updates. ScienceClaw-Eval spans 23 disciplines and measures scientific correctness, evolutionary gain, retention, cross-dataset transfer, and evolution cost through sequential streams and independent reset evaluation. Our framework repairs executable workflows through multi-turn interaction, converts re-execution-verified failure--success trajectories into linked Skill and Operator candidates, and retains an update only when source-task replay reproduces the repair and independent scientific tasks improve. Code is available at https://github.com/beita6969/ScienceClaw."
+  },
+  {
+    "id": "zhang2026r2flow",
+    "title": "R²Flow: Recursive Self-Improvement via Recursive Skill Evolution",
+    "authors": [
+      "Mingda Zhang",
+      "Qiang Huang",
+      "Yanjin Li",
+      "Zijia Wang",
+      "Qika Lin",
+      "Xiaoying Tang",
+      "Tiesunlong Shen"
+    ],
+    "venue": "arXiv",
+    "venueFull": "arXiv preprint arXiv:2609.33867",
+    "year": 2026,
+    "type": "preprint",
+    "status": "preprint",
+    "selected": false,
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2609.33867"
+    },
+    "tags": [
+      "LLM Agents",
+      "Self-Improvement",
+      "Skill Evolution"
+    ],
+    "isNew": true,
+    "abstract": "LLM-based agents can improve themselves across tasks by reusing and revising the skills they orchestrate into executable procedures. Flow-based training fits this loop: it samples procedures in proportion to reward, and the flow through each skill credits it for the next library revision. Three obstacles stand in the way of making this self-improvement reliable: flow training suffers strategy collapse over tree-structured histories; nonnegative flow-based credit rewards frequent use as if it were benefit; and library edits rest on the task reward the policy optimizes. We introduce R$^2$ Flow, a recursive self-improvement framework that alternates policy learning, independent verification, and versioned skill-library updates on a shared-state orchestration graph. The graph merges histories that differ only in the order of independent steps, allowing flow training to pool evidence across equivalent executions. A flow-share readout of the trained flow, invariant to the backward policy, and a separate signed utility rank which skills to change, verifier evidence decides whether an edit is warranted, and a residual-variance plateau sets when to update. Committed edits reshape the graph the next policy learns on, realizing recursive skill evolution. Across question answering, mathematical reasoning, interactive decision making, and code generation, R$^2$ Flow improves task accuracy and library-edit precision over heuristic orchestration, reinforcement learning, and skill-evolution baselines, and transfers across executors. Code is available at https://github.com/beita6969/r2flow."
+  },
+  {
+    "id": "liu2026tiem",
+    "title": "TIEM: Temporal Integration of Hypergraph Evidence and Skill Memory for Event-Driven Financial Forecasting",
+    "authors": [
+      "Wenjin Liu",
+      "Shen Pang",
+      "Chenxi Wang",
+      "Tiesunlong Shen",
+      "Jiajie He",
+      "Zhe Cui",
+      "Xiaobao Wu",
+      "Anh Tuan Luu",
+      "Haoran Luo"
+    ],
+    "venue": "arXiv",
+    "venueFull": "arXiv preprint arXiv:2608.13024",
+    "year": 2026,
+    "type": "preprint",
+    "status": "preprint",
+    "selected": false,
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2608.13024"
+    },
+    "tags": [
+      "Financial Forecasting",
+      "Hypergraph",
+      "LLM Agents"
+    ],
+    "isNew": true,
+    "abstract": "Event-driven catalyst-outcome forecasting increasingly uses retrieval- and memory-augmented large language model agents for prediction. However, training-data contamination and temporal leakage can create an Evidence Chasm between reported accuracy and true predictive ability. We propose TIEM, a timestamp-gated framework with three coordinated components: an Event-Evidence Hypergraph (EEH) for timestamp-filtered multi-tier retrieval; a Case-based Skill Memory (CSM) for source-tagged temporal skills; and Heterogeneous Evidence-Experience Fusion Reasoning (HEFR) for evidence-experience fusion and prediction. We also introduce FinPURE, a recent-period A-share holdout benchmark, and use a Name-Date Probe to assess per-model name-date sensitivity rather than assuming training cutoffs. Results on five financial forecasting benchmarks show TIEM outperforms current baselines. Our project is available at https://github.com/QwenQKing/Fin_TIEM."
+  },
+  {
+    "id": "zhang2026skillflow",
+    "title": "SkillFlow: Flow-Driven Recursive Skill Evolution for Agentic Orchestration",
+    "authors": [
+      "Mingda Zhang",
+      "Tiesunlong Shen",
+      "Haoran Luo",
+      "Wenjin Liu",
+      "Zikai Xiao",
+      "Erik Cambria",
+      "Xiaoying Tang"
+    ],
+    "venue": "arXiv",
+    "venueFull": "arXiv preprint arXiv:2605.14089",
+    "year": 2026,
+    "type": "preprint",
+    "status": "preprint",
+    "selected": false,
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2605.14089"
+    },
+    "tags": [
+      "LLM Agents",
+      "Agentic Orchestration",
+      "Skill Evolution"
+    ],
+    "isNew": true,
+    "abstract": "In recent years, a variety of powerful LLM-based agentic systems have been applied to automate complex tasks through task orchestration. However, existing orchestration methods still face key challenges, including strategy collapse under reward maximization, high gradient variance with opaque credit assignment, and unguided skill evolution whose decisions are typically made by directly prompting an LLM to judge rather than derived from principled training signals. To address these challenges, we propose SkillFlow, a flow-based framework that takes a trainable Supervisor as the agent and a structured environment with dynamic skill library and frozen executor, automating task orchestration through multi-turn interaction. SkillFlow employs Tempered Trajectory Balance (TTB), a regression-based flow-matching loss that samples trajectories proportional to reward, preserving diverse orchestration strategies rather than collapsing to a single mode. The same flow objective yields a jointly learned backward policy that provides transparent per-step credit assignment at zero additional inference cost. Building on these flow diagnostics, a recursive skill evolution mechanism determines when to evolve, what skills to create or prune, and where decision gaps lie -- closing the loop from training signal to autonomous capability growth. Experimental results on 14 datasets show that SkillFlow significantly outperforms baselines across question answering, mathematical reasoning, code generation, and real-world interactive decision making tasks. Our code is available at https://anonymous.4open.science/r/SkillFlow-E850."
+  },
+  {
+    "id": "zou2026aflow",
+    "title": "Affective Flow Language Model for Emotional Support Conversation",
+    "authors": [
+      "Chenghui Zou",
+      "Ning Wang",
+      "Tiesunlong Shen",
+      "Luwei Xiao",
+      "Chuan Ma",
+      "Xiangpeng Li",
+      "Rui Mao",
+      "Erik Cambria"
+    ],
+    "venue": "arXiv",
+    "venueFull": "arXiv preprint arXiv:2602.08826",
+    "year": 2026,
+    "type": "preprint",
+    "status": "preprint",
+    "selected": false,
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2602.08826"
+    },
+    "tags": [
+      "Emotional Support Conversation",
+      "Large Language Models",
+      "Affective Computing"
+    ],
+    "isNew": true,
+    "abstract": "Large language models (LLMs) have advanced emotional support conversation, but existing alignment methods rely mainly on sparse preferences at the response level or outcomes at the dialogue level, providing limited supervision for sequential strategy decisions in multi-turn interactions. This raises a key question: how can detailed process signals be derived from overall dialogue outcomes to guide the gradual adaptation of support strategies? We propose the Affective Flow Language Model (AFlow), which models multi-turn emotional support as an affective utility flow evolving along dialogue trajectories. AFlow searches diverse support trajectories and estimates the utility of intermediate dialogue states and candidate strategies. It further introduces Affective Flow Preference Optimization (AFPO), which uses a flow-balance objective defined over dialogue subpaths to propagate downstream preference signals to intermediate states and learn strategy transitions consistent with support outcomes over the full dialogue. AFlow introduces flow-balance learning into multi-turn affective interaction, providing a process-based approach to dynamic affect modeling and continuous strategy optimization. Experiments on ExTES and ESConv show consistent improvements in strategy alignment, response diversity, and generation quality across different model environments and evaluation settings. Our code is available at https://github.com/chz2025/AffectiveFlow."
   }
 ]

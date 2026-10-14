@@ -1,13 +1,13 @@
 ---
 import { Picture } from 'astro:assets';
 import Icon from './Icon.astro';
+import RecentTicker from './RecentTicker.astro';
 import SocialLinks from './SocialLinks.astro';
-import { profile, currentPositions } from '../lib/data';
+import { currentPositions, photoAlt, profile } from '../lib/data';
 import { resolvePhoto } from '../lib/photo';
 
 const photo = resolvePhoto(profile.photo);
-const alt = profile.photoAlt ?? `Portrait of ${profile.name}`;
-const roles = [...new Set(currentPositions.map((p) => p.title))].join(' / ');
+const roles = [...new Set(currentPositions.map((p) => p.title))];
 
 // Split the name into words of glyphs for the staggered, variable-axis entrance.
 let glyphIndex = 0;
@@ -15,17 +15,41 @@ const words = profile.name
   .split(/\s+/)
   .filter(Boolean)
   .map((w) => [...w].map((ch) => ({ ch, i: glyphIndex++ })));
-const lead = currentPositions[0];
-// Titles are already in the kicker; repeat them per org only when they differ.
-const showTitles = new Set(currentPositions.map((p) => p.title)).size > 1;
+
+// The headline may already name the roles and orgs ("Research Fellow, Duke-NUS
+// & NTU"); don't say the same thing three times in the kicker and the chips.
+const headline = profile.headline.toLowerCase();
+const initials = (org: string) =>
+  org
+    .split(/[\s-]+/)
+    .filter((w) => /^[A-Z]/.test(w))
+    .map((w) => w[0])
+    .join('');
+const named = (org: string) =>
+  headline.includes(org.toLowerCase()) || (initials(org).length > 1 && new RegExp(`\\b${initials(org)}\\b`).test(profile.headline));
+const showPositions = !currentPositions.every((p) => named(p.org));
+const showRoles = !roles.every((r) => headline.includes(r.toLowerCase()));
+// Titles are in the kicker; repeat them per org only when they differ.
+const showTitles = roles.length > 1;
+const kicker = showRoles || profile.location;
 ---
 
 <section class="hero container" aria-labelledby="hero-name">
   <div class="copy">
-    <p class="eyebrow kicker rise" style="--i: 0">
-      <span class="pulse" aria-hidden="true"></span>
-      {roles}{profile.location && <span class="loc"><Icon name="map-pin" />{profile.location}</span>}
-    </p>
+    {
+      kicker && (
+        <p class="eyebrow kicker rise" style="--i: 0">
+          <span class="pulse" aria-hidden="true" />
+          {showRoles && <span>{roles.join(' / ')}</span>}
+          {profile.location && (
+            <span class:list={['loc', { 'loc--sep': showRoles }]}>
+              <Icon name="map-pin" />
+              {profile.location}
+            </span>
+          )}
+        </p>
+      )
+    }
 
     <h1 id="hero-name" class="name">
       <span class="sr-only">{profile.name}</span>
@@ -50,22 +74,24 @@ const showTitles = new Set(currentPositions.map((p) => p.title)).size > 1;
 
     <p class="headline rise" style="--i: 3">{profile.headline}</p>
 
-    <ul class="positions rise" role="list" style="--i: 4" aria-label="Current positions">
-      {
-        currentPositions.map((p) => (
-          <li>
-            {showTitles && <span class="pos-title">{p.title}</span>}
-            {p.url ? (
-              <a href={p.url} rel="noopener">
-                {p.org}
-              </a>
-            ) : (
-              <span>{p.org}</span>
-            )}
-          </li>
-        ))
-      }
-    </ul>
+    {
+      showPositions && (
+        <ul class="positions rise" role="list" style="--i: 4" aria-label="Current positions">
+          {currentPositions.map((p) => (
+            <li>
+              {showTitles && <span class="pos-title">{p.title}</span>}
+              {p.url ? (
+                <a href={p.url} rel="noopener">
+                  {p.org}
+                </a>
+              ) : (
+                <span>{p.org}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      )
+    }
 
     <div class="cta rise" style="--i: 5">
       <SocialLinks variant="hero" />
@@ -80,37 +106,32 @@ const showTitles = new Set(currentPositions.map((p) => p.title)).size > 1;
     </div>
   </div>
 
-  <figure class="portrait rise" style="--i: 2">
-    <div class="frame spotlight">
-      {
-        photo.kind === 'asset' ? (
-          <Picture
-            src={photo.src}
-            alt={alt}
-            formats={['avif', 'webp']}
-            widths={[200, 360, 560, 820]}
-            sizes="(min-width: 64rem) 26rem, (min-width: 48rem) 38vw, 5.5rem"
-            loading="eager"
-            fetchpriority="high"
-            decoding="async"
-            class="photo"
-          />
-        ) : (
-          <img src={photo.src} alt={alt} width="800" height="800" class="photo" loading="eager" decoding="async" />
-        )
-      }
+  <div class="aside">
+    <figure class="portrait rise" style="--i: 2">
+      <div class="frame spotlight">
+        {
+          photo.kind === 'asset' ? (
+            <Picture
+              src={photo.src}
+              alt={photoAlt}
+              formats={['avif', 'webp']}
+              widths={[160, 320, 480, 640]}
+              sizes="(min-width: 64rem) 17rem, (min-width: 48rem) 14rem, 4.25rem"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              class="photo"
+            />
+          ) : (
+            <img src={photo.src} alt={photoAlt} width="640" height="640" class="photo" loading="eager" decoding="async" />
+          )
+        }
+      </div>
+    </figure>
+    <div class="ticker rise" style="--i: 6">
+      <RecentTicker />
     </div>
-    {
-      lead && (
-        <figcaption class="caption glass">
-          <span class="caption__label">Now</span>
-          <span class="caption__text">
-            {lead.title}, {lead.org}
-          </span>
-        </figcaption>
-      )
-    }
-  </figure>
+  </div>
 </section>
 
 <style>
@@ -130,6 +151,9 @@ const showTitles = new Set(currentPositions.map((p) => p.title)).size > 1;
     .copy > :not(.kicker) {
       grid-column: 1 / -1;
     }
+    .aside {
+      display: contents;
+    }
     .portrait {
       grid-row: 1;
       grid-column: 1;
@@ -138,6 +162,11 @@ const showTitles = new Set(currentPositions.map((p) => p.title)).size > 1;
     .kicker {
       grid-row: 1;
       grid-column: 2;
+    }
+    /* Mobile: the ticker stacks below the hero text. */
+    .ticker {
+      grid-column: 1 / -1;
+      margin-top: 0.75rem;
     }
 
     @media (min-width: 48rem) {
@@ -158,11 +187,35 @@ const showTitles = new Set(currentPositions.map((p) => p.title)).size > 1;
         grid-column: auto;
         grid-row: auto;
       }
-      .portrait {
+      /* Portrait top-right, the glass ticker overlapping its lower edge. */
+      .aside {
+        display: grid;
         grid-column: 2;
-        width: auto;
-        justify-self: end;
-        max-width: 26rem;
+        grid-row: 1;
+        align-content: center;
+        justify-items: end;
+      }
+      .portrait {
+        grid-row: auto;
+        grid-column: auto;
+        width: min(100%, 14rem);
+        /* leaves room for the offset plate behind the photo */
+        margin-inline-end: 1.25rem;
+      }
+      .ticker {
+        grid-column: auto;
+        width: 100%;
+        margin-top: -3.5rem;
+        position: relative;
+        z-index: 1;
+      }
+    }
+    @media (min-width: 64rem) {
+      .portrait {
+        width: 17rem;
+      }
+      .ticker {
+        margin-top: -4.5rem;
       }
     }
 
@@ -198,6 +251,8 @@ const showTitles = new Set(currentPositions.map((p) => p.title)).size > 1;
       display: inline-flex;
       align-items: center;
       gap: 0.3em;
+    }
+    .loc--sep {
       padding-inline-start: 0.6em;
       border-inline-start: 1px solid var(--line-strong);
     }
@@ -329,9 +384,6 @@ const showTitles = new Set(currentPositions.map((p) => p.title)).size > 1;
       height: 100%;
       object-fit: cover;
     }
-    .caption {
-      display: none;
-    }
     @media (min-width: 48rem) {
       .frame {
         border-radius: var(--r-xl);
@@ -357,28 +409,6 @@ const showTitles = new Set(currentPositions.map((p) => p.title)).size > 1;
           color-mix(in oklch, var(--accent) 12%, transparent) 9px 10px
         );
         z-index: -1;
-      }
-      .caption {
-        position: absolute;
-        left: -1.75rem;
-        bottom: 1.75rem;
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        max-width: calc(100% + 1rem);
-        padding: 0.55rem 0.9rem 0.55rem 0.55rem;
-        border-radius: var(--r-m);
-        font-size: var(--step--1);
-        line-height: 1.3;
-      }
-      .caption__label {
-        padding: 0.15rem 0.45rem;
-        border-radius: var(--r-xs);
-        background: var(--accent);
-        color: var(--accent-ink);
-        font-family: var(--ff-mono);
-        font-size: var(--step--2);
-        font-weight: 600;
       }
     }
   }

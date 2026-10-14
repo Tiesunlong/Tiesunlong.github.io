@@ -440,7 +440,7 @@
     flex: none;
   }
 
-  /* Small inline action links (PDF, arXiv, Code, BibTeX …) */
+  /* Small inline action links (PDF, arXiv, DOI, BibTeX …) */
   .action {
     display: inline-flex;
     align-items: center;

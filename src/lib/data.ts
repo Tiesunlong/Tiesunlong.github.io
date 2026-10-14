@@ -19,9 +19,11 @@ import {
   publicationsSchema,
   servicesSchema,
   siteSchema,
+  type ProfileLink,
   type RawPublication,
 } from './schema';
 import { venueRank, type Rank } from './venues';
+import { arxivUrl, doiUrl } from './bibtex';
 
 function load<S extends z.ZodType>(file: string, schema: S, raw: unknown): z.output<S> {
   const result = schema.safeParse(raw);
@@ -38,16 +40,47 @@ function load<S extends z.ZodType>(file: string, schema: S, raw: unknown): z.out
   return result.data;
 }
 
+/* ---------- no-code-links policy ---------- */
+
+// The owner wants no links to source code anywhere on the site. Rather than
+// trusting every data file, anything that points at a code host is dropped here,
+// once, so no component can render it.
+const CODE_HOST = /\b(github\.com|gitlab\.com|gitee\.com|bitbucket\.org|anonymous\.4open\.science|codeocean\.com)\b/i;
+const isCodeUrl = (url: string | undefined) => url !== undefined && CODE_HOST.test(url);
+
+/** Removes "Our code is available at https://github.com/…" style sentences. */
+function stripCodeMentions(text: string): string {
+  return text
+    .split(/(?<=[.!?])\s+(?=[A-Z])/)
+    .filter((sentence) => !(/https?:\/\//i.test(sentence) && CODE_HOST.test(sentence)))
+    .join(' ')
+    .trim();
+}
+
+/** Abstracts copied from papers sometimes keep inline TeX such as R$^2$; render the simple cases. */
+const SUPERSCRIPT: Record<string, string> = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '+': '⁺', '-': '⁻', n: 'ⁿ' };
+const tidyTex = (text: string) =>
+  text.replace(/\$\^\{?([0-9+\-n]+)\}?\$/g, (whole, sup: string) =>
+    [...sup].every((c) => SUPERSCRIPT[c]) ? [...sup].map((c) => SUPERSCRIPT[c]).join('') : whole,
+  );
+
 export const site = load('site.json', siteSchema, siteJson);
-export const profile = load('profile.json', profileSchema, profileJson);
+
+const rawProfile = load('profile.json', profileSchema, profileJson);
+export type PublicLink = ProfileLink & { kind: Exclude<ProfileLink['kind'], 'github'> };
+export const profile = {
+  ...rawProfile,
+  links: rawProfile.links.filter((l): l is PublicLink => l.kind !== 'github' && !isCodeUrl(l.url)),
+};
+export const photoAlt = profile.photoAlt ?? `Profile picture of ${profile.name}`;
 
 /* ---------- names ---------- */
 
 const normName = (s: string) =>
   s
     .normalize('NFKD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-zA-Z一-鿿]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z\u4e00-\u9fff]/g, '')
     .toLowerCase();
 
 const ownerKeys = new Set([profile.name, ...site.ownerNames].map(normName));
@@ -67,6 +100,10 @@ export interface Author {
 }
 
 export interface Publication extends RawPublication {
+  /** Position in publications.json (ties within a year keep this order). */
+  order: number;
+  /** Best external link: DOI > arXiv > PDF > project > OpenReview. */
+  primaryLink: string | undefined;
   authorList: Author[];
   /** Derived venue chip (CCF tier or the `rank` override). */
   venueRank: Rank | undefined;
@@ -112,8 +149,15 @@ for (const p of rawPublications) {
   }
 }
 
+const primaryLink = (l: RawPublication['links']) =>
+  (l.doi && doiUrl(l.doi)) ?? (l.arxiv && arxivUrl(l.arxiv)) ?? l.pdf ?? l.project ?? l.openreview;
+
 export const publications: Publication[] = rawPublications
-  .map((p, index) => {
+  .map((raw, index) => {
+    const links = Object.fromEntries(
+      Object.entries(raw.links).filter(([, url]) => url !== undefined && !isCodeUrl(url)),
+    ) as RawPublication['links'];
+    const p = { ...raw, links, abstract: raw.abstract && (tidyTex(stripCodeMentions(raw.abstract)) || undefined) };
     const authorList = parseAuthors(p);
     const ownerIdx = authorList.findIndex((a) => a.isOwner);
     const ownerFirst =
@@ -122,7 +166,10 @@ export const publications: Publication[] = rawPublications
       .filter(Boolean)
       .join(' ')
       .toLowerCase();
-    return { pub: { ...p, authorList, venueRank: venueRank(p), ownerFirst, search }, index };
+    return {
+      pub: { ...p, order: index, primaryLink: primaryLink(links), authorList, venueRank: venueRank(p), ownerFirst, search },
+      index,
+    };
   })
   // Newest year first; within a year accepted > published > preprint, then file order.
   .sort((a, b) => b.pub.year - a.pub.year || STATUS_ORDER[a.pub.status] - STATUS_ORDER[b.pub.status] || a.index - b.index)
@@ -132,6 +179,15 @@ export const selectedPublications = (() => {
   const picked = publications.filter((p) => p.selected);
   return picked.length ? picked : publications.slice(0, 4);
 })();
+
+/**
+ * Hero ticker: the newest peer-reviewed papers (accepted or published, no
+ * preprints), newest year first, then file order.
+ */
+export const recentPublications = publications
+  .filter((p) => p.status !== 'preprint' && p.type !== 'preprint')
+  .toSorted((a, b) => b.year - a.year || a.order - b.order)
+  .slice(0, 8);
 
 export function groupByYear<T extends { year: number }>(items: T[]): Array<[number, T[]]> {
   const groups = new Map<number, T[]>();

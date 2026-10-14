@@ -1,7 +1,6 @@
 ---
 import Icon, { type IconName } from './Icon.astro';
-import { profile } from '../lib/data';
-import type { ProfileLink } from '../lib/schema';
+import { profile, type PublicLink } from '../lib/data';
 import { isExternal } from '../lib/format';
 
 interface Props {
@@ -10,9 +9,9 @@ interface Props {
 }
 const { variant = 'hero' } = Astro.props;
 
-const ICONS: Record<ProfileLink['kind'], IconName> = {
+// No GitHub entry: code links are filtered out in lib/data.ts (owner's policy).
+const ICONS: Record<PublicLink['kind'], IconName> = {
   scholar: 'graduation-cap',
-  github: 'github',
   orcid: 'identification',
   dblp: 'database',
   linkedin: 'linkedin',
@@ -23,11 +22,11 @@ const ICONS: Record<ProfileLink['kind'], IconName> = {
   other: 'link',
 };
 
-const links: ProfileLink[] = [...profile.links];
+const links: PublicLink[] = [...profile.links];
 if (profile.email && !links.some((l) => l.kind === 'email')) {
   links.push({ kind: 'email', label: 'Email', url: `mailto:${profile.email}` });
 }
-const href = (l: ProfileLink) => (l.kind === 'email' && !l.url.startsWith('mailto:') ? `mailto:${l.url}` : l.url);
+const href = (l: PublicLink) => (l.kind === 'email' && !l.url.startsWith('mailto:') ? `mailto:${l.url}` : l.url);
 ---
 
 {

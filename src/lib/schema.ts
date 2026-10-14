@@ -69,7 +69,7 @@ export const profileSchema = z.object({
   location: optText,
   email: optText,
   photo: text,
-  /** Alt text for the photo (optional extra; defaults to "Portrait of <name>"). */
+  /** Alt text for the photo (optional extra; defaults to "Profile picture of <name>"). */
   photoAlt: optText,
   bio: z.array(text).min(1, 'add at least one bio paragraph'),
   interests: textList,
@@ -98,13 +98,14 @@ export const newsSchema = z.array(
 export const PUB_TYPES = ['conference', 'journal', 'workshop', 'preprint', 'book-chapter'] as const;
 export const PUB_STATUSES = ['published', 'accepted', 'preprint'] as const;
 
+// No `code` key on purpose: the owner does not want code links anywhere on the
+// site, so a `code` field in the data is stripped like any other unknown key.
 const linksSchema = z.preprocess(
   (v) => v ?? {},
   z.object({
     pdf: optText,
     arxiv: optText,
     doi: optText,
-    code: optText,
     project: optText,
     openreview: optText,
   }),

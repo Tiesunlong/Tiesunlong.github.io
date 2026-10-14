@@ -6,7 +6,16 @@ import { formatDate } from '../lib/format';
 import { renderInline } from '../lib/markdown';
 
 const numbers = [
-  { value: stats.papers, label: stats.papers === 1 ? 'Paper' : 'Papers', hint: stats.yearFrom ? `since ${stats.yearFrom}` : undefined },
+  {
+    value: stats.papers,
+    label: stats.papers === 1 ? 'Paper' : 'Papers',
+    hint:
+      stats.peerReviewed < stats.papers
+        ? `${stats.peerReviewed} peer-reviewed`
+        : stats.yearFrom
+          ? `since ${stats.yearFrom}`
+          : undefined,
+  },
   { value: stats.firstAuthor, label: 'First-author', hint: 'incl. co-first' },
   { value: stats.ccfA, label: 'CCF-A', hint: 'top-tier venues' },
   { value: stats.venues.length, label: stats.venues.length === 1 ? 'Venue' : 'Venues', hint: 'distinct' },
@@ -44,7 +53,7 @@ const marquee = [...half, ...half];
               <dt>{n.label}</dt>
               <dd class="number__value">
                 <span class="sr-only">{n.value}</span>
-                <span class="count" aria-hidden="true" style={`--to: ${n.value}`} />
+                <span class="count" aria-hidden="true" style={`--tally-to: ${n.value}`} />
               </dd>
               {n.hint && <dd class="number__hint">{n.hint}</dd>}
             </div>
@@ -250,11 +259,11 @@ const marquee = [...half, ...half];
       line-height: 1;
       letter-spacing: -0.04em;
       font-variant-numeric: tabular-nums lining-nums;
-      --n: var(--to);
-      counter-reset: n var(--n);
+      --tally: var(--tally-to);
+      counter-reset: tally var(--tally);
     }
     .count::after {
-      content: counter(n);
+      content: counter(tally);
     }
     .number__hint {
       order: 2;
@@ -273,10 +282,10 @@ const marquee = [...half, ...half];
     }
     @keyframes count-up {
       from {
-        --n: 0;
+        --tally: 0;
       }
       to {
-        --n: var(--to);
+        --tally: var(--tally-to);
       }
     }
 
@@ -455,7 +464,8 @@ const marquee = [...half, ...half];
     }
   }
 
-  @property --n {
+  /* Registered (and therefore global): keep the name specific. */
+  @property --tally {
     syntax: '<integer>';
     inherits: false;
     initial-value: 0;

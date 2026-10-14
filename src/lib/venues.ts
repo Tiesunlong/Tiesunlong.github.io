@@ -15,7 +15,7 @@ const CCF: Record<string, 'A' | 'B' | 'C'> = {
   // Conferences
   AAAI: 'A', IJCAI: 'A', NEURIPS: 'A', NIPS: 'A', ICML: 'A', ACL: 'A', CVPR: 'A', ICCV: 'A',
   SIGIR: 'A', KDD: 'A', SIGKDD: 'A', WWW: 'A', THEWEBCONF: 'A', ACMMM: 'A', MM: 'A',
-  EMNLP: 'B', COLING: 'B', NAACL: 'B', ICASSP: 'B', CIKM: 'B', WSDM: 'B', ECAI: 'B', ECCV: 'B', ICDM: 'B',
+  EMNLP: 'B', COLING: 'B', NAACL: 'B', ICASSP: 'B', CIKM: 'B', WSDM: 'B', ECAI: 'B', ECCV: 'B', ICDM: 'B', BIBM: 'B',
   // Journals
   TPAMI: 'A', TKDE: 'A', TOIS: 'A', IJCV: 'A', JMLR: 'A', TIP: 'A', AIJ: 'A',
   TNNLS: 'B', TAFFC: 'B', IEEETRANSACTIONSONAFFECTIVECOMPUTING: 'B', TASLP: 'B', TACL: 'B',

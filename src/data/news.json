@@ -1,5 +1,25 @@
 [
   {
+    "date": "2026-09",
+    "text": "**FlowSteer** accepted at **NeurIPS 2026**.",
+    "kind": "paper"
+  },
+  {
+    "date": "2026-08",
+    "text": "**Reasoning through Evolution** accepted at **ACM MM 2026** as an **Oral** presentation.",
+    "kind": "paper"
+  },
+  {
+    "date": "2026-07",
+    "text": "First-author paper **Controllable Graph Diffusion for Community Search** accepted by **Information Fusion**.",
+    "kind": "paper"
+  },
+  {
+    "date": "2026-07",
+    "text": "**Prompt-R1** published in **Findings of ACL 2026**.",
+    "kind": "paper"
+  },
+  {
     "date": "2025-11",
     "text": "Our paper LLMdoctor has been accepted by AAAI 2026!",
     "kind": "paper"
@@ -16,7 +36,7 @@
   },
   {
     "date": "2025-03",
-    "text": "Paper accepted by Information Fusion (IF=15.5).",
+    "text": "Paper accepted by Information Fusion.",
     "kind": "paper"
   },
   {

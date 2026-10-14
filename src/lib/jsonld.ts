@@ -1,6 +1,6 @@
 /** schema.org structured data: one Person, referenced by every ScholarlyArticle. */
 import { profile, currentPositions, type Publication } from './data';
-import { doiUrl, arxivUrl } from './bibtex';
+import { doiUrl } from './bibtex';
 import { plainText } from './format';
 
 const SITE = import.meta.env.SITE ?? 'https://tiesunlong.github.io';
@@ -28,7 +28,7 @@ export function personLd() {
 }
 
 export function articleLd(p: Publication) {
-  const url = p.links.doi ? doiUrl(p.links.doi) : p.links.arxiv ? arxivUrl(p.links.arxiv) : p.links.pdf;
+  const url = p.primaryLink;
   return {
     '@type': 'ScholarlyArticle',
     '@id': new URL(`/publications/#${p.id}`, SITE).href,
