@@ -91,6 +91,8 @@
     --ff-display: var(--font-display, Georgia, serif);
     --ff-sans: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
     --ff-mono: var(--font-mono, ui-monospace, monospace);
+    /* Self-hosted fonts carry no CJK glyphs; name the system Chinese faces so no OS falls back to a bitmap-era default. */
+    --ff-cjk: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif;
     --step--2: clamp(0.72rem, 0.7rem + 0.08vw, 0.76rem);
     --step--1: clamp(0.8rem, 0.78rem + 0.1vw, 0.86rem);
     --step-0: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);

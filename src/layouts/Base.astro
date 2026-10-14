@@ -20,7 +20,9 @@ interface Props {
 }
 
 const { title, description, ogType, jsonLd, ambient = 'page', noindex } = Astro.props;
-const fullTitle = title ? `${title} · ${profile.name}` : `${profile.name} · ${profile.positions[0]?.title ?? 'Researcher'}`;
+// Home title carries the native-script name too, so a search for it (e.g. on Baidu) matches.
+const homeName = profile.nameNative ? `${profile.name} (${profile.nameNative})` : profile.name;
+const fullTitle = title ? `${title} · ${profile.name}` : `${homeName} · ${profile.positions[0]?.title ?? 'Researcher'}`;
 ---
 
 <!doctype html>
