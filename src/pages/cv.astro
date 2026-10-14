@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import PageHead from '../components/PageHead.astro';
-import { awards, experience, groupByYear, profile, publications, services } from '../lib/data';
+import { awards, experience, groupByYear, peerReviewed, preprints, profile, publications, services } from '../lib/data';
 import type { Experience } from '../lib/schema';
 import { graph, personLd } from '../lib/jsonld';
 import { renderInline } from '../lib/markdown';
@@ -10,10 +10,14 @@ import { renderInline } from '../lib/markdown';
 const positions = experience.filter((e) => e.kind === 'position');
 const education = experience.filter((e) => e.kind === 'education');
 const pdf = profile.links.find((l) => l.kind === 'cv');
-// Continuous numbering across year groups, newest first.
+// Continuous numbering across year groups, newest first; preprints last.
 const pubGroups = (() => {
   let n = 0;
-  return groupByYear(publications).map(([year, items]) => ({ year, items, start: (n += items.length) - items.length + 1 }));
+  const groups = [
+    ...groupByYear(peerReviewed).map(([year, items]) => ({ label: String(year), items })),
+    ...(preprints.length ? [{ label: 'Preprints', items: preprints }] : []),
+  ];
+  return groups.map((g) => ({ ...g, start: (n += g.items.length) - g.items.length + 1 }));
 })();
 const sections: Array<{ id: string; title: string; items: Experience[] }> = [
   { id: 'positions', title: 'Positions', items: positions },
@@ -91,9 +95,9 @@ const sections: Array<{ id: string; title: string; items: Experience[] }> = [
             Publications <a class="see-all no-print" href="/publications/">Full list</a>
           </h2>
           <div class="pubs">
-            {pubGroups.map(({ year, items, start }) => (
+            {pubGroups.map(({ label, items, start }) => (
               <div class="pub-year">
-                <p class="pub-year__label mono">{year}</p>
+                <p class="pub-year__label mono">{label}</p>
                 <ol class="refs" start={start}>
                   {items.map((p) => (
                     <li>
@@ -108,7 +112,7 @@ const sections: Array<{ id: string; title: string; items: Experience[] }> = [
                       {p.authorList.at(-1)?.etAl ? ' ' : '. '}
                       <a href={`/publications/#${p.id}`} class="ref-title">{p.title}</a>. <em>{p.venueFull ?? p.venue}</em>, {p.year}
                       {p.venueRank && <span class:list={['tag', `tag--${p.venueRank.tier}`]}>{p.venueRank.label}</span>}
-                      {p.status !== 'published' && <span class="tag tag--status">{p.status}</span>}
+                      {p.status === 'accepted' && <span class="tag tag--status">accepted</span>}
                     </li>
                   ))}
                 </ol>

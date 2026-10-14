@@ -9,12 +9,11 @@ const numbers = [
   {
     value: stats.papers,
     label: stats.papers === 1 ? 'Paper' : 'Papers',
-    hint:
-      stats.peerReviewed < stats.papers
-        ? `${stats.peerReviewed} peer-reviewed`
-        : stats.yearFrom
-          ? `since ${stats.yearFrom}`
-          : undefined,
+    hint: stats.preprints
+      ? `+${stats.preprints} ${stats.preprints === 1 ? 'preprint' : 'preprints'}`
+      : stats.yearFrom
+        ? `since ${stats.yearFrom}`
+        : undefined,
   },
   { value: stats.firstAuthor, label: 'First-author', hint: 'incl. co-first' },
   { value: stats.ccfA, label: 'CCF-A', hint: 'top-tier venues' },

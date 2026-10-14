@@ -11,9 +11,11 @@ interface Props {
   /** Render `id` so /publications/#<id> deep links land here. */
   anchor?: boolean | undefined;
   headingLevel?: 'h3' | 'h4' | undefined;
+  /** Full-width lead card: larger title and an abstract teaser instead of the toggle. */
+  featured?: boolean | undefined;
 }
 
-const { pub, variant = 'row', anchor = false, headingLevel: Heading = 'h3' } = Astro.props;
+const { pub, variant = 'row', anchor = false, headingLevel: Heading = 'h3', featured = false } = Astro.props;
 const key = `${variant}-${pub.id}`;
 
 const links: Array<{ label: string; href: string; icon: IconName }> = [];
@@ -33,7 +35,7 @@ const last = pub.authorList.length - 1;
 
 <article
   id={anchor ? pub.id : undefined}
-  class:list={['paper', `paper--${variant}`, 'spotlight', { 'is-new': pub.isNew }]}
+  class:list={['paper', `paper--${variant}`, 'spotlight', { 'is-new': pub.isNew, 'paper--featured': featured }]}
   data-paper
   data-type={pub.type}
   data-year={pub.year}
@@ -78,6 +80,8 @@ const last = pub.authorList.length - 1;
     }
   </p>
 
+  {featured && pub.abstract && <p class="teaser">{pub.abstract}</p>}
+
   <p class="venue">
     <span class="venue__name">{venueLine}</span>
     {pub.note && <span class="venue__note" set:html={renderInline(pub.note)} />}
@@ -98,7 +102,7 @@ const last = pub.authorList.length - 1;
       BibTeX
     </button>
     {
-      pub.abstract && (
+      pub.abstract && !featured && (
         <button class="action" type="button" data-disclose aria-controls={`abs-${key}`} aria-expanded="true" hidden>
           <Icon name="quotes" />
           Abstract
@@ -108,7 +112,7 @@ const last = pub.authorList.length - 1;
   </div>
 
   {
-    pub.abstract && (
+    pub.abstract && !featured && (
       <div class="abstract" id={`abs-${key}`}>
         <p>{pub.abstract}</p>
       </div>
@@ -130,7 +134,8 @@ const last = pub.authorList.length - 1;
   @layer components {
     .paper {
       position: relative;
-      display: grid;
+      display: flex;
+      flex-direction: column;
       gap: 0.55rem;
       container-type: inline-size;
     }
@@ -192,6 +197,26 @@ const last = pub.authorList.length - 1;
     .paper--card .title {
       font-size: var(--step-2);
       line-height: 1.2;
+    }
+    /* Cards in a row can differ in height: keep their actions on one baseline. */
+    .paper--card .actions {
+      margin-top: auto;
+      padding-top: 0.35rem;
+    }
+    .paper--featured .title {
+      font-size: var(--step-3);
+      max-width: 30ch;
+    }
+    .teaser {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      overflow: hidden;
+      max-width: 78ch;
+      font-size: var(--step-0);
+      color: var(--ink-2);
+      line-height: 1.65;
     }
     .title a {
       text-decoration: none;

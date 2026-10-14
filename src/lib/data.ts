@@ -180,12 +180,16 @@ export const selectedPublications = (() => {
   return picked.length ? picked : publications.slice(0, 4);
 })();
 
+export const isPreprint = (p: Pick<Publication, 'status' | 'type'>) => p.status === 'preprint' || p.type === 'preprint';
+/** Accepted or published work; everything the stats, chart and venue list count. */
+export const peerReviewed = publications.filter((p) => !isPreprint(p));
+export const preprints = publications.filter(isPreprint);
+
 /**
  * Hero ticker: the newest peer-reviewed papers (accepted or published, no
  * preprints), newest year first, then file order.
  */
-export const recentPublications = publications
-  .filter((p) => p.status !== 'preprint' && p.type !== 'preprint')
+export const recentPublications = peerReviewed
   .toSorted((a, b) => b.year - a.year || a.order - b.order)
   .slice(0, 8);
 
@@ -209,13 +213,15 @@ export const experience = load('experience.json', experienceSchema, experienceJs
 
 /* ---------- derived numbers (never hard-coded) ---------- */
 
-const counted = publications.filter((p) => p.status !== 'preprint');
-const years = publications.map((p) => p.year);
+// Preprints are listed but never counted.
+const counted = peerReviewed;
+const years = counted.map((p) => p.year);
 
 export const stats = {
-  papers: publications.length,
-  peerReviewed: counted.length,
-  firstAuthor: publications.filter((p) => p.ownerFirst).length,
+  /** Accepted + published. */
+  papers: counted.length,
+  preprints: preprints.length,
+  firstAuthor: counted.filter((p) => p.ownerFirst).length,
   ccfA: counted.filter((p) => p.venueRank?.tier === 'a').length,
   venues: [...new Set(counted.map((p) => p.venue))],
   yearFrom: years.length ? Math.min(...years) : undefined,
@@ -228,7 +234,7 @@ export const papersPerYear =
     ? []
     : Array.from({ length: stats.yearTo - stats.yearFrom + 1 }, (_, i) => {
         const year = stats.yearFrom! + i;
-        const items = publications.filter((p) => p.year === year);
+        const items = counted.filter((p) => p.year === year);
         return { year, total: items.length, journal: items.filter((p) => p.type === 'journal').length };
       });
 

@@ -3,7 +3,7 @@ import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import PageHead from '../../components/PageHead.astro';
 import PaperCard from '../../components/PaperCard.astro';
-import { groupByYear, profile, publications, stats } from '../../lib/data';
+import { groupByYear, peerReviewed, preprints, profile, publications, stats } from '../../lib/data';
 import type { PubType } from '../../lib/schema';
 import { graph, personLd, articleLd } from '../../lib/jsonld';
 import { plural } from '../../lib/format';
@@ -16,8 +16,12 @@ const TYPE_LABEL: Record<PubType, string> = {
   'book-chapter': 'Chapter',
 };
 
-const groups = groupByYear(publications);
-const years = groups.map(([y]) => y);
+// Accepted/published work by year; preprints get their own group at the end.
+const groups: Array<{ key: string; label: string; items: typeof publications }> = [
+  ...groupByYear(peerReviewed).map(([year, items]) => ({ key: String(year), label: String(year), items })),
+  ...(preprints.length ? [{ key: 'preprints', label: 'Preprints', items: preprints }] : []),
+];
+const years = [...new Set(publications.map((p) => p.year))].sort((a, b) => b - a);
 const selectedCount = publications.filter((p) => p.selected).length;
 const views = [
   { value: 'all', label: 'All', count: publications.length },
@@ -34,9 +38,11 @@ const has = {
 };
 
 const summaryParts = [
-  plural(stats.papers, 'paper'),
+  plural(stats.papers, 'peer-reviewed paper'),
+  stats.preprints ? plural(stats.preprints, 'preprint') : '',
   stats.firstAuthor ? `${stats.firstAuthor} first-author` : '',
   stats.ccfA ? `${stats.ccfA} at CCF-A venues` : '',
+  stats.preprints ? plural(stats.preprints, 'preprint') : '',
 ].filter(Boolean);
 const summary = summaryParts.join(' · ');
 const scholar = profile.links.find((l) => l.kind === 'scholar');
@@ -140,12 +146,19 @@ const description = `Publications by ${profile.name}: ${summary}. Search, filter
           </div>
 
           <div class="years">
-            {groups.map(([year, items]) => (
-              <section class="year" data-year-group={year} aria-labelledby={`year-${year}`}>
-                <h2 class="year__label" id={`year-${year}`}>
-                  {year}
-                  <span class="year__count mono" data-year-count>{items.length}</span>
-                </h2>
+            {groups.map(({ key, label, items }) => (
+              <section
+                class:list={['year', { 'year--preprints': key === 'preprints' }]}
+                data-year-group={key}
+                aria-labelledby={`year-${key}`}
+              >
+                <div class="year__head">
+                  <h2 class="year__label" id={`year-${key}`}>
+                    {label}
+                    <span class="year__count mono" data-year-count>{items.length}</span>
+                  </h2>
+                  {key === 'preprints' && <p class="year__note">Not yet peer-reviewed; not counted in the totals above.</p>}
+                </div>
                 <div class="year__list">
                   {items.map((p) => (
                     <PaperCard pub={p} anchor headingLevel="h3" />
@@ -344,7 +357,7 @@ const description = `Publications by ${profile.name}: ${summary}. Search, filter
       .year {
         grid-template-columns: 8rem minmax(0, 1fr);
       }
-      .year__label {
+      .year__head {
         position: sticky;
         top: 11rem;
         align-self: start;
@@ -360,6 +373,21 @@ const description = `Publications by ${profile.name}: ${summary}. Search, filter
       letter-spacing: -0.04em;
       color: var(--ink-3);
       font-variant-numeric: lining-nums;
+    }
+    .year--preprints {
+      margin-top: 2.5rem;
+      border-top: 1px dashed var(--line-strong);
+    }
+    .year--preprints .year__label {
+      flex-wrap: wrap;
+      font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.2rem);
+      letter-spacing: -0.02em;
+    }
+    .year__note {
+      margin-top: 0.5rem;
+      font-size: var(--step--1);
+      color: var(--ink-2);
+      max-width: 40ch;
     }
     .year__count {
       font-size: var(--step--1);
