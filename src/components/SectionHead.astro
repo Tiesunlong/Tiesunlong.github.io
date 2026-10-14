@@ -1,0 +1,77 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  id: string;
+  index?: string | undefined;
+  title: string;
+  lede?: string | undefined;
+  action?: { href: string; label: string } | undefined;
+}
+const { id, index, title, lede, action } = Astro.props;
+---
+
+<header class="head reveal">
+  <div class="text">
+    {index && <p class="eyebrow"><span class="num">{index}</span><span class="rule" aria-hidden="true"></span></p>}
+    <h2 id={id}>{title}</h2>
+    {lede && <p class="lede">{lede}</p>}
+  </div>
+  {
+    action && (
+      <a class="more" href={action.href}>
+        {action.label}
+        <Icon name="arrow-right" />
+      </a>
+    )
+  }
+</header>
+
+<style>
+  @layer components {
+    .head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      justify-content: space-between;
+      gap: 1rem 2rem;
+      margin-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    }
+    .text {
+      display: grid;
+      gap: 0.6rem;
+    }
+    .rule {
+      display: inline-block;
+      width: 2.5rem;
+      height: 1px;
+      background: var(--line-strong);
+    }
+    h2 {
+      font-size: var(--step-3);
+      scroll-margin-top: 7rem;
+    }
+    .lede {
+      max-width: 52ch;
+      color: var(--ink-2);
+    }
+    .more {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: var(--step--1);
+      font-weight: 550;
+      text-decoration: none;
+      color: var(--ink-2);
+    }
+    .more:hover {
+      color: var(--accent);
+    }
+    .more :global(.icon) {
+      transition: translate var(--dur-2) var(--ease-spring);
+    }
+    .more:hover :global(.icon) {
+      translate: 3px 0;
+    }
+  }
+</style>

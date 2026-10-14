@@ -1,0 +1,14 @@
+---
+/**
+ * Preload only the basic-latin file of the two above-the-fold families.
+ * astro.config.mjs lists each family's latin variant first, so it is entry 0;
+ * latin-ext stays lazy (fetched only when a page uses those glyphs).
+ */
+import { fontData } from 'astro:assets';
+
+const urls = (['--font-display', '--font-sans'] as const)
+  .map((v) => fontData[v]?.[0]?.src[0]?.url)
+  .filter((u): u is string => Boolean(u));
+---
+
+{urls.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}

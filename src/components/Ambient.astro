@@ -1,0 +1,118 @@
+---
+/**
+ * Living background: three slow aurora blobs behind the top of the page plus a
+ * fixed film-grain layer. Pure CSS, GPU-friendly (transform only), and frozen
+ * under prefers-reduced-motion.
+ */
+interface Props {
+  /** "hero" is taller and brighter (home), "page" is a calmer band for sub-pages. */
+  variant?: 'hero' | 'page' | undefined;
+}
+const { variant = 'page' } = Astro.props;
+---
+
+<div class:list={['ambient', `ambient--${variant}`]} aria-hidden="true">
+  <div class="aurora">
+    <span class="blob blob--1"></span>
+    <span class="blob blob--2"></span>
+    <span class="blob blob--3"></span>
+  </div>
+  <div class="grid-lines"></div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+
+<style>
+  @layer components {
+    .ambient {
+      position: absolute;
+      inset: 0 0 auto;
+      height: min(1100px, 125dvh);
+      z-index: var(--z-ambient);
+      overflow: hidden;
+      pointer-events: none;
+      -webkit-mask-image: linear-gradient(to bottom, #000 30%, transparent 92%);
+      mask-image: linear-gradient(to bottom, #000 30%, transparent 92%);
+    }
+    .ambient--page {
+      height: min(620px, 80dvh);
+      opacity: 0.7;
+    }
+    .aurora {
+      position: absolute;
+      inset: 0;
+    }
+    .blob {
+      position: absolute;
+      width: max(46rem, 70vw);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      will-change: transform;
+    }
+    .blob--1 {
+      top: -38%;
+      right: -22%;
+      background: radial-gradient(closest-side, var(--aurora-1), transparent);
+      animation: drift-1 36s ease-in-out infinite alternate;
+    }
+    .blob--2 {
+      top: -30%;
+      left: -30%;
+      width: max(40rem, 58vw);
+      background: radial-gradient(closest-side, var(--aurora-2), transparent);
+      animation: drift-2 44s ease-in-out infinite alternate;
+    }
+    .blob--3 {
+      top: 18%;
+      left: 22%;
+      width: max(34rem, 48vw);
+      background: radial-gradient(closest-side, var(--aurora-3), transparent);
+      animation: drift-3 52s ease-in-out infinite alternate;
+    }
+    /* A faint engineering grid that fades out radially: the "lab notebook" */
+    .grid-lines {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, color-mix(in oklch, var(--ink) 6%, transparent) 1px, transparent 1px),
+        linear-gradient(to bottom, color-mix(in oklch, var(--ink) 6%, transparent) 1px, transparent 1px);
+      background-size: 64px 64px;
+      background-position: center top;
+      -webkit-mask-image: radial-gradient(ellipse 70% 55% at 70% 20%, #000 10%, transparent 70%);
+      mask-image: radial-gradient(ellipse 70% 55% at 70% 20%, #000 10%, transparent 70%);
+    }
+    .grain {
+      position: fixed;
+      inset: 0;
+      z-index: var(--z-ambient);
+      pointer-events: none;
+      opacity: 0.09;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .45 0 0 0 0 .4 0 0 0 1.4 -.35'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    @keyframes drift-1 {
+      to {
+        transform: translate3d(-12vw, 10vh, 0) scale(1.15) rotate(25deg);
+      }
+    }
+    @keyframes drift-2 {
+      to {
+        transform: translate3d(14vw, 6vh, 0) scale(0.9);
+      }
+    }
+    @keyframes drift-3 {
+      to {
+        transform: translate3d(-8vw, -12vh, 0) scale(1.2);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .blob {
+        animation: none;
+      }
+    }
+    @media print {
+      .grain {
+        display: none;
+      }
+    }
+  }
+</style>

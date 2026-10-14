@@ -1,0 +1,54 @@
+---
+interface Props {
+  eyebrow?: string | undefined;
+  title: string;
+  lede?: string | undefined;
+}
+const { eyebrow, title, lede } = Astro.props;
+---
+
+<header class="page-head container">
+  {eyebrow && <p class="eyebrow rise" style="--i: 0">{eyebrow}</p>}
+  <h1 class="rise" style="--i: 1">{title}</h1>
+  {
+    Astro.slots.has('lede') ? (
+      <p class="lede rise" style="--i: 2">
+        <slot name="lede" />
+      </p>
+    ) : (
+      lede && <p class="lede rise" style="--i: 2">{lede}</p>
+    )
+  }
+  <div class="extra rise" style="--i: 3">
+    <slot />
+  </div>
+</header>
+
+<style>
+  @layer components {
+    .page-head {
+      display: grid;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: clamp(2.5rem, 1.6rem + 4vw, 4.75rem);
+      font-weight: 420;
+      letter-spacing: -0.035em;
+      line-height: 1;
+    }
+    .lede {
+      max-width: 58ch;
+      font-size: var(--step-1);
+      color: var(--ink-2);
+    }
+    .extra:empty {
+      display: none;
+    }
+    .extra {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+  }
+</style>

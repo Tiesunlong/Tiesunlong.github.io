@@ -1,0 +1,283 @@
+---
+import Icon, { type IconName } from './Icon.astro';
+import type { Publication } from '../lib/data';
+import { arxivUrl, doiUrl, toBibtex } from '../lib/bibtex';
+import { renderInline } from '../lib/markdown';
+
+interface Props {
+  pub: Publication;
+  /** "row": hairline list on /publications/; "card": raised card on the home page. */
+  variant?: 'row' | 'card' | undefined;
+  /** Render `id` so /publications/#<id> deep links land here. */
+  anchor?: boolean | undefined;
+  headingLevel?: 'h3' | 'h4' | undefined;
+}
+
+const { pub, variant = 'row', anchor = false, headingLevel: Heading = 'h3' } = Astro.props;
+const key = `${variant}-${pub.id}`;
+
+const links: Array<{ label: string; href: string; icon: IconName }> = [];
+if (pub.links.pdf) links.push({ label: 'PDF', href: pub.links.pdf, icon: 'file-pdf' });
+if (pub.links.arxiv) links.push({ label: 'arXiv', href: arxivUrl(pub.links.arxiv), icon: 'file-text' });
+if (pub.links.openreview) links.push({ label: 'OpenReview', href: pub.links.openreview, icon: 'article' });
+if (pub.links.doi) links.push({ label: 'DOI', href: doiUrl(pub.links.doi), icon: 'link' });
+if (pub.links.code) links.push({ label: 'Code', href: pub.links.code, icon: 'code' });
+if (pub.links.project) links.push({ label: 'Project', href: pub.links.project, icon: 'arrow-up-right' });
+const primary = links[0]?.href;
+
+const status = pub.status === 'accepted' ? 'Accepted' : pub.status === 'preprint' ? 'Preprint' : undefined;
+const venueLine = [pub.venueFull ?? pub.venue, pub.track].filter(Boolean).join(' · ');
+const last = pub.authorList.length - 1;
+---
+
+<article
+  id={anchor ? pub.id : undefined}
+  class:list={['paper', `paper--${variant}`, 'spotlight', { 'is-new': pub.isNew }]}
+  data-paper
+  data-type={pub.type}
+  data-year={pub.year}
+  data-selected={pub.selected ? '' : undefined}
+  data-search={pub.search}
+>
+  <div class="meta">
+    <span class="tag tag--venue">{pub.venue} {pub.year}</span>
+    {pub.venueRank && <span class:list={['tag', `tag--${pub.venueRank.tier}`]} title="Venue tier">{pub.venueRank.label}</span>}
+    {status && <span class="tag tag--status">{status}</span>}
+    {pub.isNew && <span class="tag tag--new">New</span>}
+  </div>
+
+  <Heading class="title">
+    {primary ? <a href={primary} rel="noopener">{pub.title}</a> : pub.title}
+  </Heading>
+
+  <p class="authors">
+    {
+      pub.authorList.map((a, i) => (
+        <>
+          {a.etAl ? (
+            <span class="etal">et al.</span>
+          ) : (
+            <span class:list={['author', { me: a.isOwner }]}>{a.name}</span>
+          )}
+          {a.equal && (
+            <>
+              <sup class="mark" aria-hidden="true">*</sup>
+              <span class="sr-only"> (equal contribution)</span>
+            </>
+          )}
+          {a.corresponding && (
+            <>
+              <sup class="mark" aria-hidden="true">†</sup>
+              <span class="sr-only"> (corresponding author)</span>
+            </>
+          )}
+          {i < last && (pub.authorList[i + 1]?.etAl ? ' ' : ', ')}
+        </>
+      ))
+    }
+  </p>
+
+  <p class="venue">
+    <span class="venue__name">{venueLine}</span>
+    {pub.note && <span class="venue__note" set:html={renderInline(pub.note)} />}
+  </p>
+
+  <div class="actions">
+    {
+      links.map((l) => (
+        <a class="action" href={l.href} rel="noopener">
+          <Icon name={l.icon} />
+          {l.label}
+        </a>
+      ))
+    }
+    <button class="action bib needs-js" type="button" data-bibtex={`bib-${key}`} aria-label={`Copy BibTeX for ${pub.title}`}>
+      <Icon name="copy" class="bib__copy" />
+      <Icon name="check" class="bib__done" />
+      BibTeX
+    </button>
+    {
+      pub.abstract && (
+        <button class="action" type="button" data-disclose aria-controls={`abs-${key}`} aria-expanded="true" hidden>
+          <Icon name="quotes" />
+          Abstract
+        </button>
+      )
+    }
+  </div>
+
+  {
+    pub.abstract && (
+      <div class="abstract" id={`abs-${key}`}>
+        <p>{pub.abstract}</p>
+      </div>
+    )
+  }
+  {
+    variant === 'row' && pub.tags.length > 0 && (
+      <ul class="tags" role="list" aria-label="Keywords">
+        {pub.tags.map((t) => (
+          <li>{t}</li>
+        ))}
+      </ul>
+    )
+  }
+  <template id={`bib-${key}`}>{toBibtex(pub)}</template>
+</article>
+
+<style>
+  @layer components {
+    .paper {
+      position: relative;
+      display: grid;
+      gap: 0.55rem;
+      container-type: inline-size;
+    }
+    .paper--row {
+      padding: 1.4rem 1.25rem;
+      margin-inline: -1.25rem;
+      border-radius: var(--r-l);
+      transition: background-color var(--dur-2) ease;
+    }
+    .paper--row + :global(.paper--row) {
+      border-top: 1px solid var(--line);
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+    @media (hover: hover) {
+      .paper--row:hover {
+        background: color-mix(in oklch, var(--bg-raised) 75%, transparent);
+      }
+    }
+    .paper--row:target {
+      background: var(--accent-soft);
+      scroll-margin-top: 7rem;
+    }
+    .paper--card {
+      padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+      background: color-mix(in oklch, var(--bg-raised) 80%, transparent);
+      border: 1px solid var(--line);
+      border-radius: var(--r-l);
+      box-shadow:
+        var(--shadow-1),
+        inset 0 1px 0 var(--glass-edge);
+      transition:
+        transform var(--dur-3) var(--ease-spring),
+        box-shadow var(--dur-2) ease;
+    }
+    @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+      .paper--card:hover {
+        transform: translateY(-3px);
+        box-shadow:
+          var(--shadow-3),
+          inset 0 1px 0 var(--glass-edge);
+      }
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .title {
+      font-size: var(--step-1);
+      font-weight: 520;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      max-width: 62ch;
+    }
+    .paper--card .title {
+      font-size: var(--step-2);
+      line-height: 1.2;
+    }
+    .title a {
+      text-decoration: none;
+      background-image: linear-gradient(var(--accent), var(--accent));
+      background-size: 0% 1px;
+      background-repeat: no-repeat;
+      background-position: 0 100%;
+      transition:
+        background-size var(--dur-3) var(--ease-out),
+        color var(--dur-1) ease;
+    }
+    .title a:hover {
+      background-size: 100% 1px;
+    }
+    .authors {
+      font-size: var(--step--1);
+      color: var(--ink-2);
+      line-height: 1.6;
+    }
+    .etal {
+      font-style: italic;
+    }
+    .venue {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 0.75rem;
+      font-size: var(--step--1);
+      color: var(--ink-2);
+    }
+    .venue__name {
+      font-style: italic;
+    }
+    .venue__note {
+      color: var(--accent-on-soft);
+      font-weight: 550;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.35rem;
+    }
+    .bib :global(.bib__done) {
+      display: none;
+    }
+    .bib[data-copied] {
+      color: var(--accent-on-soft);
+      background: var(--accent-soft);
+    }
+    .bib[data-copied] :global(.bib__copy) {
+      display: none;
+    }
+    .bib[data-copied] :global(.bib__done) {
+      display: block;
+    }
+    .abstract:not([hidden]) {
+      max-width: 72ch;
+      padding: 0.9rem 1rem;
+      border-left: 2px solid var(--accent);
+      border-radius: 0 var(--r-m) var(--r-m) 0;
+      background: var(--bg-sunken);
+      font-size: var(--step--1);
+      color: var(--ink-2);
+      line-height: 1.7;
+    }
+    .paper :global(.bib-manual) {
+      width: 100%;
+      max-width: 72ch;
+      padding: 0.75rem 0.9rem;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--r-m);
+      background: var(--bg-sunken);
+      font-family: var(--ff-mono);
+      font-size: var(--step--2);
+      line-height: 1.6;
+      resize: vertical;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 0.9rem;
+      font-family: var(--ff-mono);
+      font-size: var(--step--2);
+      color: var(--ink-2);
+    }
+    .tags li::before {
+      content: '#';
+      color: var(--accent);
+      margin-inline-end: 0.15em;
+    }
+  }
+</style>

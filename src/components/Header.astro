@@ -1,0 +1,270 @@
+---
+import Icon from './Icon.astro';
+import Seal from './Seal.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import { NAV, isCurrent } from '../lib/nav';
+import { profile } from '../lib/data';
+
+const path = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="bar container">
+    <a class="brand" href="/" aria-label={`${profile.name}, home`}>
+      <Seal size={30} />
+      <span class="brand__name">{profile.name}</span>
+    </a>
+
+    <!-- A popover on small screens, an inline list from 52rem up. -->
+    <nav id="site-nav" class="nav" popover aria-label="Main">
+      <ul role="list">
+        {
+          NAV.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href, path) ? 'page' : undefined}>
+                <Icon name={item.icon} class="nav__icon" />
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="tools">
+      <button class="search needs-js" type="button" data-palette-open aria-keyshortcuts="Meta+K Control+K">
+        <Icon name="search" />
+        <span class="search__label">Search</span>
+        <kbd class="search__kbd" data-mod-key>Ctrl K</kbd>
+      </button>
+      <ThemeToggle />
+      <button class="menu btn btn--ghost btn--icon" type="button" popovertarget="site-nav" aria-label="Open menu">
+        <Icon name="list" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  @layer components {
+    .site-header {
+      position: sticky;
+      top: 0.75rem;
+      z-index: var(--z-header);
+      margin-top: 0.75rem;
+      view-transition-name: site-header;
+    }
+    .bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.4rem 0.45rem 0.4rem 0.6rem;
+      border-radius: 999px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      box-shadow:
+        var(--shadow-2),
+        inset 0 1px 0 var(--glass-edge);
+      -webkit-backdrop-filter: blur(18px) saturate(1.6);
+      backdrop-filter: blur(18px) saturate(1.6);
+    }
+    /* The bar starts transparent over the hero and condenses into glass as you scroll. */
+    @supports (animation-timeline: scroll()) {
+      .bar {
+        animation: condense linear both;
+        animation-timeline: scroll(root);
+        animation-range: 0 140px;
+      }
+    }
+    @keyframes condense {
+      from {
+        background-color: transparent;
+        border-color: transparent;
+        box-shadow: none;
+      }
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.15rem 0.5rem 0.15rem 0.1rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      margin-inline-end: auto;
+    }
+    .brand:hover {
+      color: var(--ink);
+    }
+    .brand__name {
+      font-size: var(--step--1);
+    }
+
+    .nav ul {
+      display: flex;
+      gap: 0.15rem;
+    }
+    .nav a {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      font-size: var(--step--1);
+      font-weight: 520;
+      color: var(--ink-2);
+      text-decoration: none;
+      transition:
+        color var(--dur-1) ease,
+        background-color var(--dur-1) ease;
+    }
+    .nav a:hover {
+      color: var(--ink);
+      background: color-mix(in oklch, var(--ink) 6%, transparent);
+    }
+    .nav a[aria-current='page'] {
+      color: var(--ink);
+      background: var(--bg-raised);
+      box-shadow:
+        var(--shadow-1),
+        inset 0 0 0 1px var(--line);
+    }
+    .nav a[aria-current='page']::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0.2rem;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+      translate: -50% 0;
+    }
+    .nav :global(.nav__icon) {
+      display: none;
+    }
+
+    .tools {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .search {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      height: 2.5rem;
+      padding: 0 0.5rem 0 0.85rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: color-mix(in oklch, var(--bg-raised) 70%, transparent);
+      color: var(--ink-2);
+      font-size: var(--step--1);
+      transition:
+        border-color var(--dur-1) ease,
+        color var(--dur-1) ease,
+        transform var(--dur-2) var(--ease-spring);
+    }
+    .search:hover {
+      color: var(--ink);
+      border-color: color-mix(in oklch, var(--accent) 40%, var(--line));
+    }
+    .search:active {
+      transform: scale(0.97);
+    }
+    .search__kbd {
+      font-size: 0.72rem;
+    }
+
+    @media (max-width: 51.99rem) {
+      .search {
+        width: 2.5rem;
+        padding: 0;
+        justify-content: center;
+      }
+      .search__label,
+      .search__kbd {
+        display: none;
+      }
+      .nav[popover] {
+        inset: 4.6rem var(--gutter) auto auto;
+        width: min(18rem, calc(100vw - 2 * var(--gutter)));
+        margin: 0;
+        padding: 0.5rem;
+        border-radius: var(--r-l);
+        border: 1px solid var(--glass-border);
+        background: var(--glass-strong);
+        color: var(--ink);
+        box-shadow:
+          var(--shadow-3),
+          inset 0 1px 0 var(--glass-edge);
+        -webkit-backdrop-filter: blur(24px) saturate(1.6);
+        backdrop-filter: blur(24px) saturate(1.6);
+        transition:
+          opacity var(--dur-2) ease,
+          translate var(--dur-2) var(--ease-spring),
+          display var(--dur-2) allow-discrete,
+          overlay var(--dur-2) allow-discrete;
+        opacity: 0;
+        translate: 0 -0.5rem;
+      }
+      .nav[popover]:popover-open {
+        opacity: 1;
+        translate: 0 0;
+      }
+      @starting-style {
+        .nav[popover]:popover-open {
+          opacity: 0;
+          translate: 0 -0.5rem;
+        }
+      }
+      .nav ul {
+        flex-direction: column;
+      }
+      .nav a {
+        display: flex;
+        padding: 0.75rem 0.9rem;
+        font-size: var(--step-0);
+        border-radius: var(--r-m);
+      }
+      .nav a[aria-current='page']::after {
+        left: auto;
+        right: 1rem;
+        bottom: 50%;
+        translate: 0 50%;
+      }
+      .nav :global(.nav__icon) {
+        display: block;
+        font-size: 1.15rem;
+        color: var(--ink-2);
+      }
+    }
+    @media (max-width: 22.5rem) {
+      .brand__name {
+        display: none;
+      }
+    }
+    @media (min-width: 52rem) {
+      .nav[popover] {
+        display: block;
+        position: static;
+        inset: auto;
+        width: auto;
+        height: auto;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        overflow: visible;
+        background: none;
+        color: inherit;
+      }
+      .menu {
+        display: none;
+      }
+    }
+  }
+</style>

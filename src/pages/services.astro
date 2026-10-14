@@ -1,0 +1,108 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { profile, services } from '../lib/data';
+import { ccfRank } from '../lib/venues';
+import { renderInline } from '../lib/markdown';
+
+const totalVenues = new Set(services.flatMap((s) => s.venues)).size;
+---
+
+<Base
+  title="Services"
+  description={`Peer reviewing and academic service by ${profile.name}${totalVenues ? ` for ${totalVenues} conferences and journals` : ''}.`}
+>
+  <PageHead
+    eyebrow={totalVenues ? `${totalVenues} venues` : undefined}
+    title="Professional services"
+    lede="Peer review and community work."
+  />
+
+  <div class="container roles">
+    {
+      services.length === 0 ? (
+        <p class="muted">No services listed yet.</p>
+      ) : (
+        services.map((s, i) => (
+          <section class="role reveal" aria-labelledby={`role-${i}`}>
+            <header class="role__head">
+              <h2 id={`role-${i}`}>{s.role}</h2>
+              <p class="role__meta mono">
+                {s.period && <span>{s.period}</span>}
+                {s.venues.length > 0 && <span>{s.venues.length} venues</span>}
+              </p>
+              {s.note && <p class="role__note" set:html={renderInline(s.note)} />}
+            </header>
+            {s.venues.length > 0 && (
+              <ul class="venues" role="list">
+                {s.venues.map((v) => {
+                  const rank = ccfRank(v);
+                  return (
+                    <li class="venue">
+                      {v}
+                      {rank && <span class:list={['tag', `tag--${rank.tier}`]}>{rank.label}</span>}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </section>
+        ))
+      )
+    }
+  </div>
+</Base>
+
+<style>
+  @layer components {
+    .roles {
+      display: grid;
+      gap: 1rem;
+    }
+    .role {
+      display: grid;
+      gap: 1.25rem 3rem;
+      padding-block: 2rem;
+      border-top: 1px solid var(--line);
+    }
+    @media (min-width: 60rem) {
+      .role {
+        grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      }
+    }
+    .role__head h2 {
+      font-size: var(--step-2);
+    }
+    .role__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 1rem;
+      margin-top: 0.5rem;
+      font-size: var(--step--1);
+      color: var(--ink-2);
+    }
+    .role__note {
+      margin-top: 0.75rem;
+      color: var(--ink-2);
+      font-size: var(--step--1);
+      max-width: 50ch;
+    }
+    .venues {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-content: start;
+    }
+    .venue {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--r-m);
+      border: 1px solid var(--line);
+      background: color-mix(in oklch, var(--bg-raised) 80%, transparent);
+      font-size: var(--step--1);
+      font-weight: 520;
+    }
+  }
+</style>

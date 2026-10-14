@@ -1,0 +1,43 @@
+---
+/** The monogram mark: initials set like a carved name seal. Also used for the favicon. */
+import { profile } from '../lib/data';
+
+interface Props {
+  size?: number | undefined;
+}
+const { size = 32 } = Astro.props;
+const initials = profile.name
+  .split(/\s+/)
+  .filter(Boolean)
+  .map((w) => w[0]?.toUpperCase())
+  .join('')
+  .slice(0, 2);
+---
+
+<span class="seal" style={`--seal: ${size}px`} aria-hidden="true">{initials}</span>
+
+<style>
+  @layer components {
+    .seal {
+      display: inline-grid;
+      place-items: center;
+      flex: none;
+      width: var(--seal);
+      height: var(--seal);
+      border-radius: calc(var(--seal) * 0.3);
+      background:
+        radial-gradient(circle at 30% 20%, oklch(1 0 0 / 0.22), transparent 55%),
+        var(--accent);
+      color: var(--accent-ink);
+      font-family: var(--ff-display);
+      font-size: calc(var(--seal) * 0.44);
+      font-weight: 640;
+      font-variation-settings: 'SOFT' 60, 'WONK' 0;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      box-shadow:
+        inset 0 0 0 1.5px oklch(1 0 0 / 0.16),
+        0 4px 10px -4px var(--accent);
+    }
+  }
+</style>

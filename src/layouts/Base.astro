@@ -1,0 +1,123 @@
+---
+import '../styles/global.css';
+import { Font } from 'astro:assets';
+import Ambient from '../components/Ambient.astro';
+import CommandPalette from '../components/CommandPalette.astro';
+import FontPreloads from '../components/FontPreloads.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Seo from '../components/Seo.astro';
+import { profile } from '../lib/data';
+
+interface Props {
+  /** Page title; the owner's name is appended automatically. */
+  title?: string | undefined;
+  description: string;
+  ogType?: 'website' | 'profile' | undefined;
+  jsonLd?: Record<string, unknown> | undefined;
+  ambient?: 'hero' | 'page' | undefined;
+}
+
+const { title, description, ogType, jsonLd, ambient = 'page' } = Astro.props;
+const fullTitle = title ? `${title} · ${profile.name}` : `${profile.name} · ${profile.positions[0]?.title ?? 'Researcher'}`;
+---
+
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <!-- Apply the stored theme before first paint (no flash). Storage may be blocked: stay on system. -->
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        root.classList.add('js');
+        try {
+          const mode = localStorage.getItem('theme');
+          if (mode === 'light' || mode === 'dark') root.dataset.theme = mode;
+        } catch {}
+      })();
+    </script>
+    <Font cssVariable="--font-display" />
+    <Font cssVariable="--font-sans" />
+    <Font cssVariable="--font-mono" />
+    <FontPreloads />
+    <Seo title={fullTitle} description={description} ogType={ogType} jsonLd={jsonLd} />
+    <meta name="theme-color" content="#fcf9f5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14110e" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/x-bibtex" href="/publications.bib" title="BibTeX" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <span id="top"></span>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Ambient variant={ambient} />
+    <Header />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <CommandPalette />
+    <div class="toast" role="status" aria-live="polite" data-toast></div>
+
+    <script>
+      import '../scripts/site';
+    </script>
+  </body>
+</html>
+
+<style>
+  @layer components {
+    .skip-link {
+      position: absolute;
+      top: 0.75rem;
+      left: 0.75rem;
+      z-index: calc(var(--z-header) + 1);
+      padding: 0.6rem 1rem;
+      border-radius: var(--r-m);
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-weight: 600;
+      text-decoration: none;
+      translate: 0 -200%;
+      transition: translate var(--dur-2) var(--ease-out);
+    }
+    .skip-link:focus-visible {
+      translate: 0 0;
+    }
+    main:focus {
+      outline: none;
+    }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: max(1.25rem, env(safe-area-inset-bottom));
+      z-index: var(--z-toast);
+      padding: 0.6rem 1rem;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--bg);
+      font-size: var(--step--1);
+      font-weight: 550;
+      box-shadow: var(--shadow-3);
+      translate: -50% 150%;
+      opacity: 0;
+      pointer-events: none;
+      transition:
+        translate var(--dur-3) var(--ease-spring),
+        opacity var(--dur-2) ease;
+    }
+    .toast:global(.is-visible) {
+      translate: -50% 0;
+      opacity: 1;
+    }
+  }
+  :global(html:not(.js) .needs-js) {
+    display: none !important;
+  }
+</style>

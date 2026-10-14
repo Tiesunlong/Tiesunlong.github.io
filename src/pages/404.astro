@@ -1,0 +1,119 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { NAV } from '../lib/nav';
+---
+
+<Base title="Page not found" description="This page does not exist. Try the publications list or the search.">
+  <section class="container lost">
+    <p class="eyebrow rise" style="--i: 0"><span class="num">404</span> · Not found</p>
+    <p class="code rise" aria-hidden="true" style="--i: 1">404</p>
+    <h1 class="rise" style="--i: 2">This page is not in the record.</h1>
+    <p class="muted rise" style="--i: 3">
+      The link may be outdated, or the address mistyped. <span class="path mono" data-path></span>
+    </p>
+    <div class="actions rise" style="--i: 4">
+      <button class="btn btn--primary needs-js" type="button" data-palette-open>
+        <Icon name="search" />
+        Search the site
+      </button>
+      <a class="btn" href="/">
+        <Icon name="arrow-left" />
+        Back home
+      </a>
+    </div>
+    <nav class="rise" style="--i: 5" aria-label="Pages">
+      <ul role="list" class="pages">
+        {
+          NAV.map((n) => (
+            <li>
+              <a href={n.href} class="page card spotlight">
+                <Icon name={n.icon} />
+                <span>
+                  <strong>{n.label}</strong>
+                  <span class="muted">{n.description}</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </section>
+</Base>
+
+<script>
+  const el = document.querySelector('[data-path]');
+  if (el) el.textContent = `(${decodeURIComponent(location.pathname)})`;
+</script>
+
+<style>
+  @layer components {
+    .lost {
+      display: grid;
+      gap: 1rem;
+      padding-block: clamp(3rem, 2rem + 6vw, 7rem) 0;
+    }
+    .code {
+      font-family: var(--ff-display);
+      font-size: clamp(7rem, 4rem + 18vw, 16rem);
+      font-weight: 300;
+      line-height: 0.85;
+      letter-spacing: -0.06em;
+      color: transparent;
+      -webkit-text-stroke: 1.5px var(--accent);
+      font-variation-settings: 'SOFT' 100, 'WONK' 1;
+    }
+    h1 {
+      font-size: var(--step-3);
+    }
+    .path {
+      font-size: var(--step--1);
+      overflow-wrap: anywhere;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .pages {
+      display: grid;
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+    @media (min-width: 40rem) {
+      .pages {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (min-width: 64rem) {
+      .pages {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+    }
+    .page {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      height: 100%;
+      padding: 1rem 1.1rem;
+      text-decoration: none;
+    }
+    .page :global(.icon) {
+      flex: none;
+      margin-top: 0.2rem;
+      color: var(--accent);
+      font-size: 1.15rem;
+    }
+    .page > span {
+      display: grid;
+      gap: 0.2rem;
+      font-size: var(--step--1);
+    }
+    .page strong {
+      font-size: var(--step-0);
+      color: var(--ink);
+    }
+  }
+</style>

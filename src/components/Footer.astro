@@ -1,0 +1,131 @@
+---
+import Icon from './Icon.astro';
+import Seal from './Seal.astro';
+import SocialLinks from './SocialLinks.astro';
+import { NAV } from '../lib/nav';
+import { profile, site, currentPositions } from '../lib/data';
+import { formatDate } from '../lib/format';
+
+const year = Number(site.lastUpdated.slice(0, 4));
+---
+
+<footer class="site-footer">
+  <div class="container inner">
+    <div class="col">
+      <div class="who">
+        <Seal size={40} />
+        <div>
+          <p class="name">
+            {profile.name}
+            {profile.nameNative && <span class="native" lang="zh-CN">{profile.nameNative}</span>}
+          </p>
+          <p class="muted small">
+            {currentPositions.map((p) => p.org).join(' · ')}
+            {profile.location && <> · {profile.location}</>}
+          </p>
+        </div>
+      </div>
+      <nav class="links" aria-label="Footer">
+        <ul role="list">
+          {NAV.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+          <li><a href="/publications.bib">BibTeX</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="col col--end">
+      <SocialLinks variant="compact" />
+      <div class="meta small muted">
+        <p>
+          Updated <time datetime={site.lastUpdated}>{formatDate(site.lastUpdated, true)}</time>
+        </p>
+        <p class="needs-js">
+          Press <kbd data-mod-key>Ctrl K</kbd> to search
+        </p>
+        <p>&copy; {year} {profile.name}</p>
+        <a class="top" href="#top"><Icon name="arrow-up-right" class="top__icon" />Back to top</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  @layer components {
+    .site-footer {
+      margin-top: var(--section-gap);
+      padding-block: 2.5rem 3rem;
+      border-top: 1px solid var(--line);
+      background: linear-gradient(to bottom, transparent, color-mix(in oklch, var(--bg-sunken) 70%, transparent));
+    }
+    .inner {
+      display: grid;
+      gap: 2rem;
+      grid-template-columns: 1fr;
+    }
+    .col {
+      display: grid;
+      gap: 1.5rem;
+      align-content: start;
+    }
+    @media (min-width: 48rem) {
+      .inner {
+        grid-template-columns: 1.5fr 1fr;
+      }
+      .col--end {
+        justify-items: end;
+        text-align: right;
+      }
+      .meta {
+        justify-items: end;
+      }
+    }
+    .who {
+      display: flex;
+      gap: 0.9rem;
+      align-items: center;
+    }
+    .name {
+      font-family: var(--ff-display);
+      font-size: var(--step-1);
+      font-weight: 520;
+      line-height: 1.2;
+    }
+    .native {
+      margin-inline-start: 0.5em;
+      font-family: var(--ff-sans);
+      font-size: 0.85em;
+      color: var(--ink-2);
+    }
+    .small {
+      font-size: var(--step--1);
+    }
+    .links ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 1.25rem;
+    }
+    .links a {
+      font-size: var(--step--1);
+      color: var(--ink-2);
+      text-decoration: none;
+    }
+    .links a:hover {
+      color: var(--accent);
+    }
+    .meta {
+      display: grid;
+      gap: 0.3rem;
+    }
+    .top {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35em;
+      margin-top: 0.4rem;
+      color: var(--ink-2);
+      text-decoration: none;
+    }
+    .top :global(.top__icon) {
+      rotate: -45deg;
+    }
+  }
+</style>

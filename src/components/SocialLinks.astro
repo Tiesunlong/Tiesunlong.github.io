@@ -1,0 +1,82 @@
+---
+import Icon, { type IconName } from './Icon.astro';
+import { profile } from '../lib/data';
+import type { ProfileLink } from '../lib/schema';
+import { isExternal } from '../lib/format';
+
+interface Props {
+  /** "hero": labelled buttons; "compact": icon-only with tooltips. */
+  variant?: 'hero' | 'compact' | undefined;
+}
+const { variant = 'hero' } = Astro.props;
+
+const ICONS: Record<ProfileLink['kind'], IconName> = {
+  scholar: 'graduation-cap',
+  github: 'github',
+  orcid: 'identification',
+  dblp: 'database',
+  linkedin: 'linkedin',
+  x: 'x-logo',
+  email: 'envelope',
+  cv: 'read-cv',
+  researchgate: 'article',
+  other: 'link',
+};
+
+const links: ProfileLink[] = [...profile.links];
+if (profile.email && !links.some((l) => l.kind === 'email')) {
+  links.push({ kind: 'email', label: 'Email', url: `mailto:${profile.email}` });
+}
+const href = (l: ProfileLink) => (l.kind === 'email' && !l.url.startsWith('mailto:') ? `mailto:${l.url}` : l.url);
+---
+
+{
+  links.length > 0 && (
+    <ul role="list" class:list={['social', `social--${variant}`]}>
+      {links.map((l, i) => (
+        <li>
+          <a
+            class:list={variant === 'hero' ? ['btn', i === 0 ? 'btn--primary' : null] : ['icon-link']}
+            href={href(l)}
+            rel={isExternal(l.url) ? 'noopener me' : undefined}
+            aria-label={variant === 'compact' ? l.label : undefined}
+            title={variant === 'compact' ? l.label : undefined}
+          >
+            <Icon name={ICONS[l.kind]} />
+            {variant === 'hero' && <span>{l.label}</span>}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  @layer components {
+    .social {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .icon-link {
+      display: inline-grid;
+      place-items: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: var(--r-m);
+      border: 1px solid var(--line);
+      color: var(--ink-2);
+      background: color-mix(in oklch, var(--bg-raised) 70%, transparent);
+      font-size: 1.15rem;
+      transition:
+        color var(--dur-1) ease,
+        border-color var(--dur-1) ease,
+        transform var(--dur-2) var(--ease-spring);
+    }
+    .icon-link:hover {
+      color: var(--accent);
+      border-color: color-mix(in oklch, var(--accent) 40%, var(--line));
+      transform: translateY(-2px);
+    }
+  }
+</style>

@@ -1,0 +1,388 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import PageHead from '../../components/PageHead.astro';
+import PaperCard from '../../components/PaperCard.astro';
+import { groupByYear, profile, publications, stats } from '../../lib/data';
+import type { PubType } from '../../lib/schema';
+import { graph, personLd, articleLd } from '../../lib/jsonld';
+import { plural } from '../../lib/format';
+
+const TYPE_LABEL: Record<PubType, string> = {
+  conference: 'Conference',
+  journal: 'Journal',
+  workshop: 'Workshop',
+  preprint: 'Preprint',
+  'book-chapter': 'Chapter',
+};
+
+const groups = groupByYear(publications);
+const years = groups.map(([y]) => y);
+const selectedCount = publications.filter((p) => p.selected).length;
+const views = [
+  { value: 'all', label: 'All', count: publications.length },
+  ...(selectedCount ? [{ value: 'selected', label: 'Selected', count: selectedCount }] : []),
+  ...(Object.keys(TYPE_LABEL) as PubType[])
+    .map((t) => ({ value: t, label: TYPE_LABEL[t], count: publications.filter((p) => p.type === t).length }))
+    .filter((v) => v.count > 0),
+];
+
+const has = {
+  equal: publications.some((p) => p.authorList.some((a) => a.equal)),
+  corresponding: publications.some((p) => p.authorList.some((a) => a.corresponding)),
+  rank: publications.some((p) => p.venueRank),
+};
+
+const summaryParts = [
+  plural(stats.papers, 'paper'),
+  stats.firstAuthor ? `${stats.firstAuthor} first-author` : '',
+  stats.ccfA ? `${stats.ccfA} at CCF-A venues` : '',
+].filter(Boolean);
+const summary = summaryParts.join(' · ');
+const scholar = profile.links.find((l) => l.kind === 'scholar');
+const description = `Publications by ${profile.name}: ${summary}. Search, filter and copy BibTeX.`;
+---
+
+<Base title="Publications" description={description} jsonLd={graph(personLd(), ...publications.map(articleLd))}>
+  <PageHead eyebrow={stats.yearFrom ? `${stats.yearFrom}–${stats.yearTo}` : undefined} title="Publications">
+    <Fragment slot="lede">
+      {summaryParts.map((part, i) => (
+        <>
+          {i > 0 && ' · '}
+          <span class="nowrap">{part}</span>
+        </>
+      ))}
+    </Fragment>
+    <a class="btn" href="/publications.bib" download>
+      <Icon name="download" />
+      All BibTeX
+    </a>
+    {
+      scholar && (
+        <a class="btn btn--ghost" href={scholar.url} rel="noopener">
+          <Icon name="graduation-cap" />
+          {scholar.label}
+        </a>
+      )
+    }
+  </PageHead>
+
+  <div class="container">
+    {
+      publications.length === 0 ? (
+        <div class="empty-state">
+          <Icon name="books" size="2rem" />
+          <h2>Publications will appear here</h2>
+          <p class="muted">Add entries to src/data/publications.json and rebuild.</p>
+        </div>
+      ) : (
+        <>
+          <form class="toolbar needs-js" role="search" aria-label="Filter publications" data-pub-filter>
+            <label class="search">
+              <Icon name="search" />
+              <span class="sr-only">Search publications</span>
+              <input type="search" name="q" placeholder="Search title, author, venue…" autocomplete="off" spellcheck="false" />
+              <kbd aria-hidden="true">/</kbd>
+            </label>
+            <fieldset class="views">
+              <legend class="sr-only">Show</legend>
+              {views.map((v) => (
+                <label class="seg">
+                  <input type="radio" name="view" value={v.value} checked={v.value === 'all'} />
+                  <span>
+                    {v.label}
+                    <span class="seg__count mono">{v.count}</span>
+                  </span>
+                </label>
+              ))}
+            </fieldset>
+            {years.length > 1 && (
+              <label class="year-select">
+                <span class="sr-only">Year</span>
+                <select name="year">
+                  <option value="">All years</option>
+                  {years.map((y) => (
+                    <option value={y}>{y}</option>
+                  ))}
+                </select>
+              </label>
+            )}
+          </form>
+
+          <div class="bar">
+            <p class="status mono" aria-live="polite" data-pub-status>
+              {plural(publications.length, 'paper')}
+            </p>
+            <dl class="legend" aria-label="Legend">
+              <div>
+                <dt><span class="me">{profile.name}</span></dt>
+                <dd>site author</dd>
+              </div>
+              {has.equal && (
+                <div>
+                  <dt class="mark">*</dt>
+                  <dd>Equal contribution</dd>
+                </div>
+              )}
+              {has.corresponding && (
+                <div>
+                  <dt class="mark">†</dt>
+                  <dd>Corresponding author</dd>
+                </div>
+              )}
+              {has.rank && (
+                <div>
+                  <dt><span class="tag tag--a">CCF</span></dt>
+                  <dd>China Computer Federation venue tier</dd>
+                </div>
+              )}
+            </dl>
+          </div>
+
+          <div class="years">
+            {groups.map(([year, items]) => (
+              <section class="year" data-year-group={year} aria-labelledby={`year-${year}`}>
+                <h2 class="year__label" id={`year-${year}`}>
+                  {year}
+                  <span class="year__count mono" data-year-count>{items.length}</span>
+                </h2>
+                <div class="year__list">
+                  {items.map((p) => (
+                    <PaperCard pub={p} anchor headingLevel="h3" />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+
+          <div class="empty-state" data-pub-empty hidden>
+            <Icon name="search" size="2rem" />
+            <h2>No papers match</h2>
+            <p class="muted">Try fewer words, another year, or a co-author's surname.</p>
+            <button class="btn" type="button" data-pub-reset>
+              Clear filters
+            </button>
+          </div>
+        </>
+      )
+    }
+  </div>
+</Base>
+
+<script>
+  import { initPubFilter } from '../../scripts/pub-filter';
+  initPubFilter();
+</script>
+
+<style>
+  @layer components {
+    .toolbar {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.55rem;
+      border-radius: var(--r-l);
+      background: var(--glass-strong);
+      border: 1px solid var(--glass-border);
+      box-shadow:
+        var(--shadow-2),
+        inset 0 1px 0 var(--glass-edge);
+      -webkit-backdrop-filter: blur(18px) saturate(1.5);
+      backdrop-filter: blur(18px) saturate(1.5);
+    }
+    @media (min-width: 48rem) {
+      .toolbar {
+        position: sticky;
+        top: 5.25rem;
+      }
+    }
+    .search {
+      flex: 1 1 16rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      min-width: 0;
+      height: 2.6rem;
+      padding: 0 0.75rem;
+      border-radius: var(--r-m);
+      border: 1px solid var(--line);
+      background: var(--bg-raised);
+      color: var(--ink-2);
+      transition:
+        border-color var(--dur-1) ease,
+        box-shadow var(--dur-1) ease;
+    }
+    .search:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .search input {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      background: none;
+      color: var(--ink);
+      outline: none;
+    }
+    .search input::placeholder {
+      color: var(--ink-2);
+    }
+    .search input::-webkit-search-cancel-button {
+      cursor: pointer;
+    }
+    .views {
+      display: flex;
+      flex: 1 1 auto;
+      overflow-x: auto;
+      scrollbar-width: none;
+      gap: 0.2rem;
+      padding: 0.2rem;
+      border: 0;
+      border-radius: var(--r-m);
+      background: var(--bg-sunken);
+      min-width: 0;
+    }
+    .seg {
+      position: relative;
+      flex: none;
+    }
+    @media (min-width: 48rem) {
+      .views {
+        flex: 0 1 auto;
+      }
+    }
+    .seg input {
+      position: absolute;
+      opacity: 0;
+      inset: 0;
+      margin: 0;
+      cursor: pointer;
+    }
+    .seg > span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: var(--r-s);
+      font-size: var(--step--1);
+      font-weight: 540;
+      color: var(--ink-2);
+      transition:
+        background-color var(--dur-1) ease,
+        color var(--dur-1) ease;
+    }
+    .seg:hover > span {
+      color: var(--ink);
+    }
+    .seg input:checked + span {
+      background: var(--bg-raised);
+      color: var(--ink);
+      box-shadow:
+        var(--shadow-1),
+        inset 0 0 0 1px var(--line);
+    }
+    .seg input:focus-visible + span {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+    .seg__count {
+      font-size: var(--step--2);
+      color: var(--ink-2);
+    }
+    .seg input:checked + span .seg__count {
+      color: var(--accent);
+    }
+    .year-select select {
+      height: 2.6rem;
+      padding: 0 2rem 0 0.8rem;
+      border-radius: var(--r-m);
+      border: 1px solid var(--line);
+      background: var(--bg-raised)
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='%23867e7a'%3E%3Cpath d='M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z'/%3E%3C/svg%3E")
+        no-repeat right 0.7rem center / 0.85rem;
+      font-size: var(--step--1);
+      appearance: none;
+      cursor: pointer;
+    }
+    .bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem 2rem;
+      margin-block: 1.25rem 0.5rem;
+    }
+    .status {
+      font-size: var(--step--1);
+      color: var(--ink-2);
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 1.25rem;
+      font-size: var(--step--1);
+      color: var(--ink-2);
+    }
+    .legend > div {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .legend .mark {
+      font-size: 1.05em;
+    }
+
+    .year {
+      display: grid;
+      gap: 0 2rem;
+      padding-top: 1.5rem;
+    }
+    @media (min-width: 60rem) {
+      .year {
+        grid-template-columns: 8rem minmax(0, 1fr);
+      }
+      .year__label {
+        position: sticky;
+        top: 11rem;
+        align-self: start;
+        padding-top: 1.3rem;
+      }
+    }
+    .year__label {
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
+      font-weight: 360;
+      letter-spacing: -0.04em;
+      color: var(--ink-3);
+      font-variant-numeric: lining-nums;
+    }
+    .year__count {
+      font-size: var(--step--1);
+      letter-spacing: 0;
+      color: var(--ink-2);
+    }
+    .year__list {
+      display: grid;
+    }
+    .empty-state {
+      display: grid;
+      justify-items: center;
+      gap: 0.75rem;
+      padding: 4rem 1rem;
+      margin-top: 1rem;
+      text-align: center;
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--r-l);
+      color: var(--ink-2);
+    }
+    .empty-state h2 {
+      font-size: var(--step-2);
+      color: var(--ink);
+    }
+  }
+</style>

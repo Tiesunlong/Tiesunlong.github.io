@@ -1,0 +1,137 @@
+---
+import Base from '../layouts/Base.astro';
+import Glance from '../components/Glance.astro';
+import Hero from '../components/Hero.astro';
+import NewsList from '../components/NewsList.astro';
+import PaperCard from '../components/PaperCard.astro';
+import SectionHead from '../components/SectionHead.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import { news, profile, publications, selectedPublications } from '../lib/data';
+import { graph, personLd } from '../lib/jsonld';
+import { plainText, truncate } from '../lib/format';
+import { renderInline } from '../lib/markdown';
+
+const description = truncate(plainText(`${profile.headline} ${profile.bio[0] ?? ''}`), 158);
+---
+
+<Base description={description} ogType="profile" ambient="hero" jsonLd={graph(personLd())}>
+  <Hero />
+
+  <section class="section container" aria-labelledby="glance">
+    <SectionHead id="glance" index="01" title="At a glance" />
+    <Glance />
+  </section>
+
+  <section class="section container about" aria-labelledby="about">
+    <div class="about__side">
+      <SectionHead id="about" index="02" title="Biography" />
+      <dl class="facts reveal">
+        {profile.location && (
+          <div>
+            <dt>Based in</dt>
+            <dd>{profile.location}</dd>
+          </div>
+        )}
+        {profile.email && (
+          <div>
+            <dt>Email</dt>
+            <dd><a href={`mailto:${profile.email}`}>{profile.email}</a></dd>
+          </div>
+        )}
+        {profile.links.length > 0 && (
+          <div>
+            <dt>Elsewhere</dt>
+            <dd><SocialLinks variant="compact" /></dd>
+          </div>
+        )}
+      </dl>
+    </div>
+    <div class="prose bio reveal">
+      {profile.bio.map((p) => <p set:html={renderInline(p)} />)}
+    </div>
+  </section>
+
+  {
+    selectedPublications.length > 0 && (
+      <section class="section container" aria-labelledby="selected">
+        <SectionHead
+          id="selected"
+          index="03"
+          title="Selected publications"
+          action={{ href: '/publications/', label: `All ${publications.length} publications` }}
+        />
+        <div class="selected">
+          {selectedPublications.map((p) => (
+            <div class="reveal">
+              <PaperCard pub={p} variant="card" />
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section container" aria-labelledby="news">
+    <SectionHead id="news" index="04" title="News" />
+    <NewsList items={news} />
+  </section>
+</Base>
+
+<style>
+  @layer components {
+    .about {
+      display: grid;
+      gap: 0 3rem;
+    }
+    @media (min-width: 64rem) {
+      .about {
+        grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+        align-items: start;
+      }
+    }
+    @media (min-width: 64rem) {
+      .about__side {
+        position: sticky;
+        top: 7rem;
+      }
+    }
+    .facts {
+      display: grid;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      font-size: var(--step--1);
+    }
+    .facts dt {
+      font-family: var(--ff-mono);
+      font-size: var(--step--2);
+      color: var(--ink-2);
+      margin-bottom: 0.3rem;
+    }
+    .facts dd {
+      overflow-wrap: anywhere;
+    }
+    .bio {
+      font-size: var(--step-1);
+      line-height: 1.7;
+    }
+    .bio :global(p:first-child) {
+      color: var(--ink);
+    }
+    .selected {
+      display: grid;
+      gap: clamp(0.75rem, 0.5rem + 1vw, 1.25rem);
+    }
+    @media (min-width: 56rem) {
+      .selected {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      /* An odd card out spans the full row instead of leaving a hole. */
+      .selected > :last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+      }
+    }
+    .selected > div {
+      display: grid;
+    }
+  }
+</style>

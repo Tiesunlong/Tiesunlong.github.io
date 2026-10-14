@@ -1,0 +1,43 @@
+---
+import Icon from './Icon.astro';
+---
+
+<!-- Cycles system → light → dark. scripts/theme.ts keeps data-mode and the label in sync. -->
+<button
+  class="theme-toggle btn btn--ghost btn--icon needs-js"
+  type="button"
+  data-theme-toggle
+  data-mode="system"
+  aria-label="Theme: follow system. Switch to light"
+  title="Theme"
+>
+  <Icon name="monitor" class="mode mode--system" />
+  <Icon name="sun" class="mode mode--light" />
+  <Icon name="moon" class="mode mode--dark" />
+</button>
+
+<style>
+  @layer components {
+    .theme-toggle {
+      position: relative;
+    }
+    .theme-toggle :global(.mode) {
+      transition:
+        opacity var(--dur-2) ease,
+        transform var(--dur-3) var(--ease-spring);
+    }
+    .theme-toggle :global(.mode:not(.mode--system)) {
+      position: absolute;
+    }
+    .theme-toggle :global(.mode) {
+      opacity: 0;
+      transform: rotate(-60deg) scale(0.6);
+    }
+    .theme-toggle[data-mode='system'] :global(.mode--system),
+    .theme-toggle[data-mode='light'] :global(.mode--light),
+    .theme-toggle[data-mode='dark'] :global(.mode--dark) {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

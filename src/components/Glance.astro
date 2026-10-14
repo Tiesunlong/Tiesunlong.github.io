@@ -1,0 +1,463 @@
+---
+/** "At a glance" bento. Every number here is computed from src/data — nothing is typed in. */
+import Icon, { type IconName } from './Icon.astro';
+import { news, papersPerYear, profile, stats, venueCounts } from '../lib/data';
+import { formatDate } from '../lib/format';
+import { renderInline } from '../lib/markdown';
+
+const numbers = [
+  { value: stats.papers, label: stats.papers === 1 ? 'Paper' : 'Papers', hint: stats.yearFrom ? `since ${stats.yearFrom}` : undefined },
+  { value: stats.firstAuthor, label: 'First-author', hint: 'incl. co-first' },
+  { value: stats.ccfA, label: 'CCF-A', hint: 'top-tier venues' },
+  { value: stats.venues.length, label: stats.venues.length === 1 ? 'Venue' : 'Venues', hint: 'distinct' },
+].filter((n) => n.value > 0);
+
+const peak = Math.max(1, ...papersPerYear.map((y) => y.total));
+const latest = news[0];
+const KIND_ICON: Record<string, IconName> = {
+  paper: 'article',
+  award: 'trophy',
+  talk: 'microphone',
+  service: 'hand-heart',
+  position: 'briefcase',
+  other: 'megaphone',
+};
+// The marquee loops by translating -50%, so it needs two identical halves, each
+// wider than the tile: repeat the venue list until a half has >= 10 entries.
+const half = venueCounts.length
+  ? Array.from({ length: Math.ceil(10 / venueCounts.length) }, () => venueCounts).flat()
+  : [];
+const marquee = [...half, ...half];
+---
+
+<div class="bento">
+  {
+    numbers.length > 0 && (
+      <article class="tile tile--numbers card spotlight reveal" aria-labelledby="glance-numbers">
+        <h3 class="tile__label eyebrow" id="glance-numbers">
+          <Icon name="books" />
+          Publication record
+        </h3>
+        <dl class="numbers">
+          {numbers.map((n) => (
+            <div class="number">
+              <dt>{n.label}</dt>
+              <dd class="number__value">
+                <span class="sr-only">{n.value}</span>
+                <span class="count" aria-hidden="true" style={`--to: ${n.value}`} />
+              </dd>
+              {n.hint && <dd class="number__hint">{n.hint}</dd>}
+            </div>
+          ))}
+        </dl>
+      </article>
+    )
+  }
+
+  {
+    papersPerYear.length > 1 && (
+      <article class="tile tile--years card spotlight reveal" aria-labelledby="glance-years">
+        <h3 class="tile__label eyebrow" id="glance-years">
+          <Icon name="article" />
+          Papers per year
+        </h3>
+        <ol class="years" role="list" style={`--cols: ${papersPerYear.length}`}>
+          {papersPerYear.map((y) => (
+            <li class="year" style={`--h: ${y.total / peak}; --j: ${y.journal / Math.max(1, y.total)}`}>
+              <span class="year__n mono">{y.total}</span>
+              <span class="year__bar" aria-hidden="true" />
+              <span class="year__y mono">{y.year}</span>
+              <span class="sr-only">{`: ${y.total} ${y.total === 1 ? 'paper' : 'papers'}`}</span>
+            </li>
+          ))}
+        </ol>
+        <p class="tile__foot legend-row" aria-hidden="true">
+          <span class="key key--conf" />Conference & other
+          <span class="key key--journal" />Journal
+        </p>
+      </article>
+    )
+  }
+
+  {
+    latest && (
+      <article class="tile tile--latest card spotlight reveal" aria-labelledby="glance-latest">
+        <h3 class="tile__label eyebrow" id="glance-latest">
+          <Icon name={KIND_ICON[latest.kind] ?? 'megaphone'} />
+          Latest
+        </h3>
+        <time class="latest__date mono" datetime={latest.date}>
+          {formatDate(latest.date)}
+        </time>
+        <p class="latest__text" set:html={renderInline(latest.text)} />
+        {news.length > 1 && (
+          <a class="tile__more" href="#news">
+            All news
+            <Icon name="arrow-right" />
+          </a>
+        )}
+      </article>
+    )
+  }
+
+  {
+    profile.interests.length > 0 && (
+      <article class="tile tile--interests card spotlight reveal" aria-labelledby="glance-interests">
+        <h3 class="tile__label eyebrow" id="glance-interests">
+          <Icon name="sparkle" />
+          Research interests
+        </h3>
+        <ul class="interests" role="list">
+          {profile.interests.map((t, i) => (
+            <li style={`--i: ${i}`}>{t}</li>
+          ))}
+        </ul>
+      </article>
+    )
+  }
+
+  {
+    venueCounts.length > 0 && (
+      <article class="tile tile--venues card reveal" aria-labelledby="glance-venues">
+        <h3 class="tile__label eyebrow" id="glance-venues">
+          <Icon name="graduation-cap" />
+          Published at
+        </h3>
+        <div class="marquee">
+          <ul class="marquee__track" role="list">
+            {marquee.map((v, i) => (
+              <li aria-hidden={i >= venueCounts.length ? 'true' : undefined}>
+                <span class="venue">{v.venue}</span>
+                {v.rank && <span class:list={['tag', `tag--${v.rank.tier}`]}>{v.rank.label}</span>}
+                {v.count > 1 && <span class="venue__count mono">×{v.count}</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </article>
+    )
+  }
+</div>
+
+<style>
+  @layer components {
+    .bento {
+      display: grid;
+      gap: clamp(0.75rem, 0.5rem + 1vw, 1.25rem);
+      grid-template-columns: minmax(0, 1fr);
+    }
+    @media (min-width: 40rem) {
+      .bento {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+      .tile--numbers,
+      .tile--interests,
+      .tile--venues {
+        grid-column: span 6;
+      }
+      .tile--years,
+      .tile--latest {
+        grid-column: span 3;
+      }
+    }
+    @media (min-width: 64rem) {
+      .bento {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+      }
+      .tile--numbers {
+        grid-column: span 7;
+      }
+      .tile--years {
+        grid-column: span 5;
+      }
+      .tile--latest {
+        grid-column: span 5;
+      }
+      .tile--interests {
+        grid-column: span 7;
+      }
+      .tile--venues {
+        grid-column: span 12;
+      }
+    }
+    .tile {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+      border-radius: var(--r-l);
+      container-type: inline-size;
+      min-width: 0;
+    }
+    .tile__label {
+      font-family: var(--ff-mono);
+      font-size: var(--step--1);
+      font-weight: 450;
+      letter-spacing: 0.02em;
+    }
+    .tile__label :global(.icon) {
+      color: var(--accent);
+    }
+    .tile__foot,
+    .tile__more {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4em;
+      margin-top: auto;
+      font-size: var(--step--1);
+      color: var(--ink-2);
+    }
+    .tile__more {
+      font-weight: 550;
+      text-decoration: none;
+      align-self: flex-start;
+    }
+    .tile__more:hover {
+      color: var(--accent);
+    }
+
+    /* Numbers */
+    .numbers {
+      margin-top: auto;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem 1rem;
+    }
+    @container (min-width: 34rem) {
+      .numbers {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+    .number {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--line);
+    }
+    .number dt {
+      order: 1;
+      font-size: var(--step--1);
+      font-weight: 550;
+    }
+    .number__value {
+      order: 0;
+    }
+    .count {
+      font-family: var(--ff-display);
+      font-size: clamp(2.6rem, 2rem + 2.5vw, 3.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums lining-nums;
+      --n: var(--to);
+      counter-reset: n var(--n);
+    }
+    .count::after {
+      content: counter(n);
+    }
+    .number__hint {
+      order: 2;
+      font-family: var(--ff-mono);
+      font-size: var(--step--2);
+      color: var(--ink-2);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      @supports (animation-timeline: view()) {
+        .count {
+          animation: count-up linear both;
+          animation-timeline: view();
+          animation-range: entry 10% cover 40%;
+        }
+      }
+    }
+    @keyframes count-up {
+      from {
+        --n: 0;
+      }
+      to {
+        --n: var(--to);
+      }
+    }
+
+    /* Papers per year: CSS bars, height relative to the busiest year */
+    .years {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+      align-items: end;
+      gap: 0.5rem;
+      min-height: 9.5rem;
+    }
+    .year {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      justify-items: center;
+      gap: 0.35rem;
+      height: 100%;
+    }
+    .year__n {
+      align-self: end;
+      font-size: var(--step--1);
+      color: var(--ink);
+    }
+    .year__bar {
+      align-self: end;
+      width: min(100%, 2.75rem);
+      height: max(3px, calc(var(--h) * 100%));
+      border-radius: var(--r-s) var(--r-s) 2px 2px;
+      background: linear-gradient(
+        to top,
+        var(--accent-soft) 0 calc(var(--j) * 100%),
+        var(--accent) calc(var(--j) * 100%)
+      );
+      box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--accent) 30%, transparent);
+      transform-origin: bottom;
+    }
+    .year__y {
+      font-size: var(--step--2);
+      color: var(--ink-2);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      @supports (animation-timeline: view()) {
+        .year__bar {
+          animation: grow linear both;
+          animation-timeline: view();
+          animation-range: entry 20% cover 45%;
+        }
+      }
+    }
+    @keyframes grow {
+      from {
+        transform: scaleY(0);
+      }
+    }
+    .legend-row {
+      gap: 0.4rem;
+      font-size: var(--step--2);
+    }
+    .key {
+      width: 0.6rem;
+      height: 0.6rem;
+      border-radius: 2px;
+      margin-inline-start: 0.6rem;
+    }
+    .key:first-child {
+      margin-inline-start: 0;
+    }
+    .key--conf {
+      background: var(--accent);
+    }
+    .key--journal {
+      background: var(--accent-soft);
+      box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--accent) 30%, transparent);
+    }
+
+    /* Latest */
+    .latest__date {
+      font-size: var(--step--1);
+      color: var(--accent);
+    }
+    .latest__text {
+      font-family: var(--ff-display);
+      font-size: var(--step-2);
+      font-weight: 400;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      margin-top: -0.4rem;
+    }
+
+    /* Interests */
+    .interests {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .interests li {
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--bg-raised);
+      font-size: var(--step--1);
+      font-weight: 500;
+      transition:
+        border-color var(--dur-1) ease,
+        color var(--dur-1) ease,
+        translate var(--dur-2) var(--ease-spring);
+    }
+    @media (hover: hover) {
+      .interests li:hover {
+        border-color: color-mix(in oklch, var(--accent) 45%, var(--line));
+        color: var(--accent-on-soft);
+        translate: 0 -2px;
+      }
+    }
+
+    /* Venues marquee */
+    .tile--venues {
+      overflow: hidden;
+    }
+    .marquee {
+      margin-inline: calc(-1 * clamp(1.25rem, 1rem + 1vw, 1.75rem));
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+      mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+      overflow: hidden;
+    }
+    .marquee__track {
+      display: flex;
+      width: max-content;
+    }
+    /* Trailing margin (not gap) keeps both halves exactly equal in width. */
+    .marquee__track li {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-inline-end: 2.5rem;
+      white-space: nowrap;
+    }
+    .venue {
+      font-family: var(--ff-display);
+      font-size: var(--step-2);
+      font-weight: 420;
+      letter-spacing: -0.015em;
+    }
+    .venue__count {
+      font-size: var(--step--1);
+      color: var(--ink-2);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .marquee__track {
+        animation: marquee 38s linear infinite;
+      }
+      .marquee:hover .marquee__track {
+        animation-play-state: paused;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .marquee {
+        -webkit-mask-image: none;
+        mask-image: none;
+      }
+      .marquee__track {
+        flex-wrap: wrap;
+        width: auto;
+        row-gap: 0.75rem;
+        padding-inline: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+      }
+      .marquee__track li[aria-hidden='true'] {
+        display: none;
+      }
+    }
+    @keyframes marquee {
+      to {
+        transform: translateX(-50%);
+      }
+    }
+  }
+
+  @property --n {
+    syntax: '<integer>';
+    inherits: false;
+    initial-value: 0;
+  }
+</style>
