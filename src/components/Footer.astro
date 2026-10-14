@@ -39,7 +39,7 @@ const year = Number(site.lastUpdated.slice(0, 4));
         <p>
           Updated <time datetime={site.lastUpdated}>{formatDate(site.lastUpdated, true)}</time>
         </p>
-        <p class="needs-js">
+        <p class="needs-js kbd-hint">
           Press <kbd data-mod-key>Ctrl K</kbd> to search
         </p>
         <p>&copy; {year} {profile.name}</p>
@@ -126,6 +126,11 @@ const year = Number(site.lastUpdated.slice(0, 4));
     }
     .top :global(.top__icon) {
       rotate: -45deg;
+    }
+    @media (pointer: coarse) {
+      .kbd-hint {
+        display: none;
+      }
     }
   }
 </style>
