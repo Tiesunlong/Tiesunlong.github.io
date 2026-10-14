@@ -44,7 +44,6 @@ const last = pub.authorList.length - 1;
 >
   <div class="meta">
     <span class="tag tag--venue">{pub.venue} {pub.year}</span>
-    {pub.venueRank && <span class:list={['tag', `tag--${pub.venueRank.tier}`]} title="Venue tier">{pub.venueRank.label}</span>}
     {status && <span class="tag tag--status">{status}</span>}
     {pub.isNew && <span class="tag tag--new">New</span>}
   </div>

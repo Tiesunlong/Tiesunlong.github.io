@@ -111,7 +111,6 @@ const sections: Array<{ id: string; title: string; items: Experience[] }> = [
                       ))}
                       {p.authorList.at(-1)?.etAl ? ' ' : '. '}
                       <a href={`/publications/#${p.id}`} class="ref-title">{p.title}</a>. <em>{p.venueFull ?? p.venue}</em>, {p.year}
-                      {p.venueRank && <span class:list={['tag', `tag--${p.venueRank.tier}`]}>{p.venueRank.label}</span>}
                       {p.status === 'accepted' && <span class="tag tag--status">accepted</span>}
                     </li>
                   ))}

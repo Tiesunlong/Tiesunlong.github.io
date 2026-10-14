@@ -2,7 +2,6 @@
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import { profile, services } from '../lib/data';
-import { ccfRank } from '../lib/venues';
 import { renderInline } from '../lib/markdown';
 
 const totalVenues = new Set(services.flatMap((s) => s.venues)).size;
@@ -35,15 +34,9 @@ const totalVenues = new Set(services.flatMap((s) => s.venues)).size;
             </header>
             {s.venues.length > 0 && (
               <ul class="venues" role="list">
-                {s.venues.map((v) => {
-                  const rank = ccfRank(v);
-                  return (
-                    <li class="venue">
-                      {v}
-                      {rank && <span class:list={['tag', `tag--${rank.tier}`]}>{rank.label}</span>}
-                    </li>
-                  );
-                })}
+                {s.venues.map((v) => (
+                  <li class="venue">{v}</li>
+                ))}
               </ul>
             )}
           </section>

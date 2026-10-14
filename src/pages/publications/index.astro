@@ -34,13 +34,11 @@ const views = [
 const has = {
   equal: publications.some((p) => p.authorList.some((a) => a.equal)),
   corresponding: publications.some((p) => p.authorList.some((a) => a.corresponding)),
-  rank: publications.some((p) => p.venueRank),
 };
 
 const summaryParts = [
   plural(stats.papers, 'peer-reviewed paper'),
   stats.firstAuthor ? `${stats.firstAuthor} first-author` : '',
-  stats.ccfA ? `${stats.ccfA} at CCF-A venues` : '',
   stats.preprints ? plural(stats.preprints, 'preprint') : '',
 ].filter(Boolean);
 const summary = summaryParts.join(' · ');
@@ -133,12 +131,6 @@ const description = `Publications by ${profile.name}: ${summary}. Search, filter
                 <div>
                   <dt class="mark">†</dt>
                   <dd>Corresponding author</dd>
-                </div>
-              )}
-              {has.rank && (
-                <div>
-                  <dt><span class="tag tag--a">CCF</span></dt>
-                  <dd>China Computer Federation venue tier</dd>
                 </div>
               )}
             </dl>

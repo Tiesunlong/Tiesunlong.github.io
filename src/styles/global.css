@@ -359,15 +359,6 @@
     border-color: color-mix(in oklch, var(--ink) 22%, transparent);
     background: var(--bg-raised);
   }
-  .tag--a {
-    color: var(--accent-on-soft);
-    background: var(--accent-soft);
-    border-color: color-mix(in oklch, var(--accent) 35%, transparent);
-  }
-  .tag--b {
-    color: var(--ink);
-    border-color: color-mix(in oklch, var(--accent) 30%, var(--line-strong));
-  }
   .tag--new {
     color: var(--accent-ink);
     background: var(--accent);

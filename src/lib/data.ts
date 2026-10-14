@@ -22,7 +22,6 @@ import {
   type ProfileLink,
   type RawPublication,
 } from './schema';
-import { venueRank, type Rank } from './venues';
 import { arxivUrl, doiUrl } from './bibtex';
 
 function load<S extends z.ZodType>(file: string, schema: S, raw: unknown): z.output<S> {
@@ -105,8 +104,6 @@ export interface Publication extends RawPublication {
   /** Best external link: DOI > arXiv > PDF > project > OpenReview. */
   primaryLink: string | undefined;
   authorList: Author[];
-  /** Derived venue chip (CCF tier or the `rank` override). */
-  venueRank: Rank | undefined;
   /** First author, or co-first via equal contribution. */
   ownerFirst: boolean;
   /** Lower-cased haystack for client-side search. */
@@ -167,7 +164,7 @@ export const publications: Publication[] = rawPublications
       .join(' ')
       .toLowerCase();
     return {
-      pub: { ...p, order: index, primaryLink: primaryLink(links), authorList, venueRank: venueRank(p), ownerFirst, search },
+      pub: { ...p, order: index, primaryLink: primaryLink(links), authorList, ownerFirst, search },
       index,
     };
   })
@@ -222,7 +219,6 @@ export const stats = {
   papers: counted.length,
   preprints: preprints.length,
   firstAuthor: counted.filter((p) => p.ownerFirst).length,
-  ccfA: counted.filter((p) => p.venueRank?.tier === 'a').length,
   venues: [...new Set(counted.map((p) => p.venue))],
   yearFrom: years.length ? Math.min(...years) : undefined,
   yearTo: years.length ? Math.max(...years) : undefined,
@@ -240,7 +236,7 @@ export const papersPerYear =
 
 /** Distinct venues with paper counts, most frequent first. */
 export const venueCounts = [...counted.reduce((m, p) => m.set(p.venue, (m.get(p.venue) ?? 0) + 1), new Map<string, number>())]
-  .map(([venue, count]) => ({ venue, count, rank: counted.find((p) => p.venue === venue && p.venueRank)?.venueRank }))
+  .map(([venue, count]) => ({ venue, count }))
   .sort((a, b) => b.count - a.count || a.venue.localeCompare(b.venue));
 
 export const currentPositions = (() => {

@@ -136,9 +136,7 @@ export const publicationsSchema = z
       abstract: optText,
       isNew: optBool,
       // Optional extras (not required by the contract):
-      // `rank` overrides the automatic venue tier chip ("" or "none" hides it);
       // `volume` / `pages` / `publisher` enrich BibTeX; `bibtex` replaces it verbatim.
-      rank: z.string().nullish().transform((v) => (v == null ? undefined : v.trim())),
       volume: z.union([z.string(), z.number()]).nullish().transform((v) => (v == null || v === '' ? undefined : String(v))),
       pages: optText,
       publisher: optText,

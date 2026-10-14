@@ -15,10 +15,11 @@ const numbers = [
         ? `since ${stats.yearFrom}`
         : undefined,
   },
-  { value: stats.firstAuthor, label: 'First-author', hint: 'incl. co-first' },
-  { value: stats.ccfA, label: 'CCF-A', hint: 'top-tier venues' },
+  { value: stats.firstAuthor, label: 'First-author', hint: 'incl. co\u2011first' },
   { value: stats.venues.length, label: stats.venues.length === 1 ? 'Venue' : 'Venues', hint: 'distinct' },
 ].filter((n) => n.value > 0);
+// One row per tile width: all numbers side by side when wide; up to 3 per row when narrow.
+const numberCols = `--cols-wide: ${numbers.length}; --cols-narrow: ${numbers.length <= 3 ? numbers.length : 2}`;
 
 const peak = Math.max(1, ...papersPerYear.map((y) => y.total));
 const latest = news[0];
@@ -46,7 +47,7 @@ const marquee = [...half, ...half];
           <Icon name="books" />
           Publication record
         </h3>
-        <dl class="numbers">
+        <dl class="numbers" style={numberCols}>
           {numbers.map((n) => (
             <div class="number">
               <dt>{n.label}</dt>
@@ -136,7 +137,6 @@ const marquee = [...half, ...half];
             {marquee.map((v, i) => (
               <li aria-hidden={i >= venueCounts.length ? 'true' : undefined}>
                 <span class="venue">{v.venue}</span>
-                {v.rank && <span class:list={['tag', `tag--${v.rank.tier}`]}>{v.rank.label}</span>}
                 {v.count > 1 && <span class="venue__count mono">×{v.count}</span>}
               </li>
             ))}
@@ -228,12 +228,12 @@ const marquee = [...half, ...half];
     .numbers {
       margin-top: auto;
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(var(--cols-narrow, 2), minmax(0, 1fr));
       gap: 1.25rem 1rem;
     }
     @container (min-width: 34rem) {
       .numbers {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(var(--cols-wide, 4), minmax(0, 1fr));
       }
     }
     .number {
