@@ -1,0 +1,157 @@
+[
+  {
+    "id": "shen2026-llmdoctor",
+    "title": "LLMdoctor: Token-Level Flow-Guided Preference Optimization for Efficient Test-Time Alignment of Large Language Models",
+    "authors": [
+      "Tiesunlong Shen",
+      "others"
+    ],
+    "venue": "AAAI",
+    "venueFull": "Proceedings of the AAAI Conference on Artificial Intelligence (AAAI)",
+    "year": 2026,
+    "type": "conference",
+    "status": "published",
+    "selected": true,
+    "tags": [
+      "Large Language Models",
+      "Preference Optimization",
+      "Test-Time Alignment"
+    ],
+    "abstract": "We propose LLMdoctor, a novel token-level flow-guided preference optimization method for efficient test-time alignment of large language models. Our approach achieves superior performance in aligning LLMs with human preferences while maintaining computational efficiency."
+  },
+  {
+    "id": "shen2025-flow-dpo-sigir",
+    "title": "Flow-guided Direct Preference Optimization for Knowledge Graph Reasoning with Trees",
+    "authors": [
+      "Tiesunlong Shen",
+      "Rui Mao",
+      "Jin Wang",
+      "others"
+    ],
+    "venue": "SIGIR",
+    "venueFull": "Proceedings of the 48th International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR)",
+    "year": 2025,
+    "type": "conference",
+    "status": "published",
+    "selected": true,
+    "tags": [
+      "Knowledge Graph Reasoning",
+      "Direct Preference Optimization",
+      "Tree Structures"
+    ],
+    "abstract": "We propose a flow-guided direct preference optimization method for knowledge graph reasoning with tree structures. Our approach achieves state-of-the-art performance on multiple knowledge graph question answering benchmarks.",
+    "pages": "1165--1175"
+  },
+  {
+    "id": "shen2025-insight-right-spot",
+    "title": "Insight at the Right Spot: Provide Decisive Subgraph Information to Graph LLM with Reinforcement Learning",
+    "authors": [
+      "Tiesunlong Shen",
+      "Erik Cambria",
+      "Jin Wang",
+      "others"
+    ],
+    "venue": "Information Fusion",
+    "venueFull": "Information Fusion",
+    "year": 2025,
+    "type": "journal",
+    "status": "published",
+    "tags": [
+      "Graph LLM",
+      "Reinforcement Learning",
+      "Subgraph Information"
+    ],
+    "abstract": "We propose a reinforcement learning-based method to provide decisive subgraph information to Graph LLMs. Our approach significantly improves the reasoning capabilities of LLMs on graph-structured data.",
+    "volume": "117",
+    "pages": "102860"
+  },
+  {
+    "id": "shen2025-reasoning-with-trees",
+    "title": "Reasoning with Trees: Faithful Question Answering over Knowledge Graph",
+    "authors": [
+      "Tiesunlong Shen",
+      "Jin Wang",
+      "Xuejie Zhang",
+      "others"
+    ],
+    "venue": "COLING",
+    "venueFull": "Proceedings of the 31st International Conference on Computational Linguistics (COLING)",
+    "year": 2025,
+    "type": "conference",
+    "status": "published",
+    "tags": [
+      "Knowledge Graph QA",
+      "Tree Reasoning",
+      "Faithful Reasoning"
+    ],
+    "abstract": "We propose a tree-based reasoning framework for faithful question answering over knowledge graphs. Our method ensures interpretable and reliable reasoning paths.",
+    "pages": "3138--3157"
+  },
+  {
+    "id": "shen2025-kd-meta-gnn",
+    "title": "Knowledge Distillation via Adaptive Meta-Learning for Graph Neural Network",
+    "authors": [
+      "Tiesunlong Shen",
+      "Jin Wang",
+      "Xuejie Zhang"
+    ],
+    "venue": "Information Sciences",
+    "venueFull": "Information Sciences",
+    "year": 2025,
+    "type": "journal",
+    "status": "published",
+    "tags": [
+      "Knowledge Distillation",
+      "Meta-Learning",
+      "Graph Neural Networks"
+    ],
+    "abstract": "We propose an adaptive meta-learning approach for knowledge distillation in graph neural networks. Our method effectively transfers knowledge from large GNN models to smaller ones while maintaining performance.",
+    "volume": "689",
+    "pages": "121505"
+  },
+  {
+    "id": "shen2025-hop-dpo-icassp",
+    "title": "Hop-level Direct Preference Optimization for Knowledge Graph Reasoning with Trees",
+    "authors": [
+      "Tiesunlong Shen",
+      "Jin Wang",
+      "Xuejie Zhang",
+      "others"
+    ],
+    "venue": "ICASSP",
+    "venueFull": "IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)",
+    "year": 2025,
+    "type": "conference",
+    "status": "published",
+    "tags": [
+      "Knowledge Graph Reasoning",
+      "Multi-hop Reasoning",
+      "Direct Preference Optimization"
+    ],
+    "abstract": "We propose a hop-level direct preference optimization method for knowledge graph reasoning with tree structures. Our approach improves multi-hop reasoning capabilities.",
+    "pages": "1--5"
+  },
+  {
+    "id": "shen2023-graphs-get-personal",
+    "title": "Graphs get Personal: Learning Representation with Contextual Pretraining for Collaborative Filtering",
+    "authors": [
+      "Tiesunlong Shen",
+      "You Zhang",
+      "Jin Wang",
+      "others"
+    ],
+    "venue": "Applied Intelligence",
+    "venueFull": "Applied Intelligence",
+    "year": 2023,
+    "type": "journal",
+    "status": "published",
+    "tags": [
+      "Collaborative Filtering",
+      "Graph Representation Learning",
+      "Contextual Pretraining"
+    ],
+    "abstract": "We propose a contextual pretraining approach for learning graph representations in collaborative filtering. Our method improves recommendation performance by capturing user-item interactions more effectively.",
+    "volume": "53",
+    "pages": "30416--30430"
+  }
+]

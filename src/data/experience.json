@@ -1,0 +1,20 @@
+[
+  {
+    "kind": "position",
+    "period": "2025 – Present",
+    "title": "Research Fellow",
+    "org": "Duke-NUS Medical School",
+    "location": "Singapore",
+    "note": "Supervisor: Prof. Enrico Petretto. Research focus: Quantum Computing and AI for Drug Design",
+    "url": "https://www.duke-nus.edu.sg/"
+  },
+  {
+    "kind": "position",
+    "period": "2024 – Present",
+    "title": "Research Fellow",
+    "org": "Nanyang Technological University",
+    "location": "Singapore",
+    "note": "Supervisor: Prof. Erik Cambria. Research focus: Large Language Model Reasoning, Knowledge Graph Reasoning",
+    "url": "https://www.ntu.edu.sg/"
+  }
+]

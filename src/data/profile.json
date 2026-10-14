@@ -1,0 +1,47 @@
+{
+  "name": "Tiesunlong Shen",
+  "headline": "Faithful, interpretable reasoning for large language models and knowledge graphs, applied to quantum computing and AI-driven drug design.",
+  "positions": [
+    {
+      "title": "Research Fellow",
+      "org": "Duke-NUS Medical School",
+      "url": "https://www.duke-nus.edu.sg/",
+      "current": true
+    },
+    {
+      "title": "Research Fellow",
+      "org": "NUS CQT",
+      "url": "https://www.quantumlah.org/",
+      "current": true
+    },
+    {
+      "title": "Research Fellow",
+      "org": "Nanyang Technological University",
+      "url": "https://www.ntu.edu.sg/",
+      "current": true
+    }
+  ],
+  "location": "Singapore",
+  "photo": "bio.jpg",
+  "photoAlt": "Avatar of Tiesunlong Shen: an illustrated white Samoyed holding a red rose",
+  "bio": [
+    "I am a **Research Fellow** at [Duke-NUS Medical School](https://www.duke-nus.edu.sg/) & [NUS CQT](https://www.quantumlah.org/) (advised by [Prof. Enrico Petretto](https://scholar.google.com/citations?user=11xd4Z8AAAAJ&hl=en)) and [Nanyang Technological University](https://www.ntu.edu.sg/) (advised by [Prof. Erik Cambria](https://sentic.net/)).",
+    "My research focuses on **Large Language Model Reasoning**, **Knowledge Graph Question Answering**, and their applications in **Quantum Computing** and **AI-driven Drug Design**. I am particularly interested in developing faithful reasoning methods that enhance the interpretability and reliability of AI systems.",
+    "I have published multiple first-author papers at top venues including AAAI, SIGIR, COLING, and journals such as Information Fusion (IF=15.5)."
+  ],
+  "interests": [
+    "Natural Language Processing",
+    "Large Language Reasoning Models",
+    "Knowledge Graph Reasoning",
+    "Graph Neural Networks",
+    "Quantum Computing",
+    "AI for Drug Design"
+  ],
+  "links": [
+    {
+      "label": "Google Scholar",
+      "url": "https://scholar.google.com/citations?user=bIiBFpgAAAAJ",
+      "kind": "scholar"
+    }
+  ]
+}

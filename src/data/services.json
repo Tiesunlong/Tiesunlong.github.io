@@ -1,0 +1,36 @@
+[
+  {
+    "role": "Conference Reviewer",
+    "venues": [
+      "ICML",
+      "SIGIR",
+      "ACL",
+      "AAAI",
+      "EMNLP",
+      "NAACL",
+      "COLING"
+    ]
+  },
+  {
+    "role": "Journal Reviewer",
+    "venues": [
+      "IEEE TCSVT",
+      "IEEE TAFFC",
+      "Information Fusion",
+      "IPM",
+      "Neural Networks",
+      "Information Sciences",
+      "KBS",
+      "npj Artificial Intelligence",
+      "ESWA",
+      "Neurocomputing",
+      "Advanced Engineering Informatics",
+      "Annals of Mathematics and Artificial Intelligence",
+      "International Journal of Machine Learning and Cybernetics",
+      "Academia AI & Industry",
+      "Molecular & Cellular Biomechanics",
+      "Journal of Intelligent Information Systems",
+      "Scientific Reports"
+    ]
+  }
+]
