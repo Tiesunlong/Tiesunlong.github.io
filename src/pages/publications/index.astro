@@ -39,7 +39,6 @@ const has = {
 
 const summaryParts = [
   plural(stats.papers, 'peer-reviewed paper'),
-  stats.preprints ? plural(stats.preprints, 'preprint') : '',
   stats.firstAuthor ? `${stats.firstAuthor} first-author` : '',
   stats.ccfA ? `${stats.ccfA} at CCF-A venues` : '',
   stats.preprints ? plural(stats.preprints, 'preprint') : '',
