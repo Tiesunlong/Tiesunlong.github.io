@@ -258,6 +258,8 @@ const copies = loop ? [0, 1] : [0];
       /* Keyboard users get the real, scrollable list so focus never lands off-screen. */
       .recent--loop:has(:focus-visible) .viewport {
         overflow-y: auto;
+        -webkit-mask-image: linear-gradient(to bottom, #000 85%, transparent);
+        mask-image: linear-gradient(to bottom, #000 85%, transparent);
       }
       .recent--loop:has(:focus-visible) .track {
         animation: none;
