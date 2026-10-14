@@ -42,6 +42,14 @@ export default defineConfig({
   build: { format: 'directory' },
   integrations: [sitemap()],
   prefetch: false,
+  vite: {
+    build: {
+      // Explicit CSS baseline (first versions with light-dark() + OKLCH). Without
+      // it the minifier folds animation-timeline into the \`animation\` shorthand,
+      // which browsers reject, silently disabling every scroll-driven animation.
+      cssTarget: ['chrome123', 'edge123', 'firefox120', 'safari17.5', 'ios17.5'],
+    },
+  },
   fonts: [
     {
       provider: fontProviders.local(),

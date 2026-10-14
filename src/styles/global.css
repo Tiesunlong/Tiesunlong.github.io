@@ -502,7 +502,7 @@
   .spotlight::before {
     content: '';
     position: absolute;
-    inset: -1px;
+    inset: 0;
     z-index: -1;
     border-radius: inherit;
     pointer-events: none;
@@ -517,7 +517,7 @@
   .spotlight::after {
     content: '';
     position: absolute;
-    inset: -1px;
+    inset: 0;
     border-radius: inherit;
     padding: 1px;
     pointer-events: none;

@@ -71,7 +71,7 @@ const groups: Array<{ title: string; items: Item[] }> = [
       aria-label="Search pages, sections and papers"
       autocomplete="off"
       spellcheck="false"
-      placeholder="Search pages, sections, papers…"
+      placeholder="Search pages and papers…"
     />
     <kbd>Esc</kbd>
   </div>
@@ -281,7 +281,8 @@ const groups: Array<{ title: string; items: Item[] }> = [
       margin-inline-end: 0.2rem;
     }
     @media (pointer: coarse) {
-      .foot {
+      .foot,
+      .field kbd {
         display: none;
       }
     }

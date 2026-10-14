@@ -34,7 +34,9 @@ const isoDate = z
 
 /** A year given as 2025 or "2025". */
 const year = z
-  .union([z.number().int(), z.string().trim().regex(/^\d{4}$/).transform(Number)])
+  .union([z.number().int(), z.string().trim().regex(/^\d{4}$/).transform(Number)], {
+    error: 'expected a four-digit year such as 2025',
+  })
   .refine((y) => y >= 1950 && y <= 2100, 'year out of range');
 
 export const LINK_KINDS = [

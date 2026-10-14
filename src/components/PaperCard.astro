@@ -134,8 +134,10 @@ const last = pub.authorList.length - 1;
       container-type: inline-size;
     }
     .paper--row {
-      padding: 1.4rem 1.25rem;
-      margin-inline: -1.25rem;
+      /* Bleed the hover surface into the gutter, but never past the viewport edge. */
+      --bleed: min(1.25rem, var(--gutter));
+      padding: 1.4rem var(--bleed);
+      margin-inline: calc(-1 * var(--bleed));
       border-radius: var(--r-l);
       transition: background-color var(--dur-2) ease;
     }
