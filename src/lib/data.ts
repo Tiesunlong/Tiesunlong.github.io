@@ -26,13 +26,14 @@ import { venueRank, type Rank } from './venues';
 function load<S extends z.ZodType>(file: string, schema: S, raw: unknown): z.output<S> {
   const result = schema.safeParse(raw);
   if (!result.success) {
-    // Name the entry, not just its index: "[4].year" -> "[4] (id "shen2025x").year"
-    for (const issue of result.error.issues) {
+    const lines = result.error.issues.map((issue) => {
+      const path = issue.path.map((p) => (typeof p === 'number' ? `[${p}]` : `.${String(p)}`)).join('').replace(/^\./, '');
+      // Name the entry, not just its index.
       const [i] = issue.path;
       const id = Array.isArray(raw) && typeof i === 'number' ? (raw[i] as { id?: unknown } | undefined)?.id : undefined;
-      if (typeof id === 'string') issue.message += ` (entry id "${id}")`;
-    }
-    throw new Error(`Invalid data in src/data/${file}\n${z.prettifyError(result.error)}`);
+      return `✖ ${issue.message}\n  → at ${path || '(root)'}${typeof id === 'string' ? ` (id "${id}")` : ''}`;
+    });
+    throw new Error(`Invalid data in src/data/${file}\n${lines.join('\n')}`);
   }
   return result.data;
 }
